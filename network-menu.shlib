@@ -1,0 +1,126 @@
+
+export NETWORK_ID=""
+export NETWORK_GATEWAY=""
+export NETWORK_PREFIX=""
+export NETWORK_BROADCAST=""
+export NETWORK_NETMASK=""
+export NETWORK_BASEDOMAIN=""
+export NETWORK_DNS_SERVER=""
+export NETWORK_TIME_SERVER=""
+
+##
+## --
+##
+
+network_dump () {
+
+cat <<EOVARS
+
+    NETWORK_ID="${NETWORK_ID}"
+    NETWORK_GATEWAY="${NETWORK_GATEWAY}"
+    NETWORK_PREFIX="${NETWORK_PREFIX}"
+    NETWORK_BROADCAST="${NETWORK_BROADCAST}"
+    NETWORK_NETMASK="${NETWORK_NETMASK}"
+    NETWORK_BASEDOMAIN="${NETWORK_BASEDOMAIN}"
+    NETWORK_DNS_SERVER="${NETWORK_DNS_SERVER}"
+    NETWORK_TIME_SERVER="${NETWORK_TIME_SERVER}"
+EOVARS
+
+}
+
+##
+## --
+##
+
+network_settings () {
+
+    if [[ ! -z ${NETWORK_PREFIX} && ! -z ${NETWORK_ID} ]]; then
+        NETWORK_BROADCAST=`ipcalc ${NETWORK_ID}/${NETWORK_PREFIX} -b | cut -d= -f2`
+        NETWORK_NETMASK=`ipcalc ${NETWORK_ID}/${NETWORK_PREFIX} -m | cut -d= -f2`
+    fi
+
+    echo "[ NETWORK ]"
+    echo "    id/pre/nm/bc ... ${NETWORK_ID} / ${NETWORK_PREFIX} / ${NETWORK_NETMASK} / ${NETWORK_BROADCAST}"
+    echo "    gw/dns/time  ... ${NETWORK_GATEWAY} / ${NETWORK_DNS_SERVER} / ${NETWORK_TIME_SERVER}"
+    echo "    base domain  ... ${NETWORK_BASEDOMAIN}"
+
+}
+
+##
+## --
+##
+
+network_menu () {
+
+    SAVED_PROMPT="$PS3"
+
+    PS3="NETWORK MENU: "
+
+    echo "----------"
+    echo ""
+
+    network_settings
+
+    echo ""
+
+    select action in "RETURN to previous menu" "Set ID" "Set Prefix" "Set Gateway" "Set Base Domain" "Set DNS Server" "Set TIME Server" 
+    do
+      case ${action}  in
+        "Set ID")
+          read -p "Enter network id [${NETWORK_ID}]: " input
+          NETWORK_ID=${input:-$NETWORK_ID}
+          ;;
+
+        "Set Prefix")
+          read -p "Enter prefix [${NETWORK_PREFIX}]: " input
+          NETWORK_PREFIX=${input:-$NETWORK_PREFIX}
+          ;;
+
+        "Set Gateway")
+          read -p "Enter gateway[${NETWORK_GATEWAY}]: " input
+          NETWORK_GATEWAY=${input:-$NETWORK_GATEWAY}
+          ;;
+
+        "Set Base Domain")
+          read -p "Enter base domain [${NETWORK_BASEDOMAIN}]: " input
+          NETWORK_BASEDOMAIN=${input:-$NETWORK_BASEDOMAIN}
+          ;;
+
+        "Set DNS Server")
+          read -p "Enter dns server ipv4 address [${NETWORK_DNS_SERVER}]: " input
+          NETWORK_DNS_SERVER=${input:-$NETWORK_DNS_SERVER}
+          ;;
+
+        "Set TIME Server")
+          read -p "Enter time server ipv4 address [${NETWORK_TIME_SERVER}]: " input
+          NETWORK_TIME_SERVER=${input:-$NETWORK_TIME_SERVER}
+          ;;
+
+        "RETURN to previous menu")
+          PS3=${SAVED_PROMPT}
+          break
+          ;;
+
+        "*")
+          echo "That's NOT an option, try again..."
+          ;;
+
+      esac
+
+      ##
+      ##    Reprint the current settings
+      ##
+
+      network_settings
+
+      ##
+      ##    The following causes the select
+      ##    statement to reprint the menu
+      ##
+
+      REPLY=
+
+    done
+
+}
+

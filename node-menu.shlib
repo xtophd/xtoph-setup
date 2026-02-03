@@ -1,0 +1,334 @@
+
+export ADDR_NODE1=""
+export ADDR_NODE2=""
+export ADDR_NODE3=""
+export ADDR_NODE4=""
+export ADDR_NODE5=""
+export ADDR_NODE6=""
+export NICMODE_NODE1="dhcp"
+export NICMODE_NODE2="dhcp"
+export NICMODE_NODE3="dhcp"
+export NICMODE_NODE4="dhcp"
+export NICMODE_NODE5="dhcp"
+export NICMODE_NODE6="dhcp"
+export BMC_NODE1=""
+export BMC_NODE2=""
+export BMC_NODE3=""
+export BMC_NODE4=""
+export BMC_NODE5=""
+export BMC_NODE6=""
+export BMC_UID_NODE1=""
+export BMC_UID_NODE2=""
+export BMC_UID_NODE3=""
+export BMC_UID_NODE4=""
+export BMC_UID_NODE5=""
+export BMC_UID_NODE6=""
+export BMC_PW_NODE1=""
+export BMC_PW_NODE2=""
+export BMC_PW_NODE3=""
+export BMC_PW_NODE4=""
+export BMC_PW_NODE5=""
+export BMC_PW_NODE6=""
+export MAC_NODE1=""
+export MAC_NODE2=""
+export MAC_NODE3=""
+export MAC_NODE4=""
+export MAC_NODE5=""
+export MAC_NODE6=""
+export HW_NODE1=""
+export HW_NODE2=""
+export HW_NODE3=""
+export HW_NODE4=""
+export HW_NODE5=""
+export HW_NODE6=""
+export KS_NODE1=""
+export KS_NODE2=""
+export KS_NODE3=""
+export KS_NODE4=""
+export KS_NODE5=""
+export KS_NODE6=""
+export RES_NODE1=""
+export RES_NODE2=""
+export RES_NODE3=""
+export RES_NODE4=""
+export RES_NODE5=""
+export RES_NODE6=""
+export NAME_NODE1="node1"
+export NAME_NODE2="node2"
+export NAME_NODE3="node3"
+export NAME_NODE4="node4"
+export NAME_NODE5="node5"
+export NAME_NODE6="node6"
+
+
+# ---
+
+node_dump () {
+
+cat <<EOVARS
+
+    BMC_PW_DEFAULT=""
+
+    BMC_UID_DEFAULT="${BMC_UID_DEFAULT}"
+    
+    ADDR_NODE1="${ADDR_NODE1}"
+    ADDR_NODE2="${ADDR_NODE2}"
+    ADDR_NODE3="${ADDR_NODE3}"
+    ADDR_NODE4="${ADDR_NODE4}"
+    ADDR_NODE5="${ADDR_NODE5}"
+    ADDR_NODE6="${ADDR_NODE6}"
+    NICMODE_NODE1="${NICMODE_NODE1}"
+    NICMODE_NODE2="${NICMODE_NODE2}"
+    NICMODE_NODE3="${NICMODE_NODE3}"
+    NICMODE_NODE4="${NICMODE_NODE4}"
+    NICMODE_NODE5="${NICMODE_NODE5}"
+    NICMODE_NODE6="${NICMODE_NODE6}"
+    BMC_NODE1="${BMC_NODE1}"
+    BMC_NODE2="${BMC_NODE2}"
+    BMC_NODE3="${BMC_NODE3}"
+    BMC_NODE4="${BMC_NODE4}"
+    BMC_NODE5="${BMC_NODE5}"
+    BMC_NODE6="${BMC_NODE6}"
+    BMC_UID_NODE1="${BMC_UID_NODE1}"
+    BMC_UID_NODE2="${BMC_UID_NODE2}"
+    BMC_UID_NODE3="${BMC_UID_NODE3}"
+    BMC_UID_NODE4="${BMC_UID_NODE4}"
+    BMC_UID_NODE5="${BMC_UID_NODE5}"
+    BMC_UID_NODE6="${BMC_UID_NODE6}"
+    BMC_PW_NODE1="${BMC_PW_NODE1}"
+    BMC_PW_NODE2="${BMC_PW_NODE2}"
+    BMC_PW_NODE3="${BMC_PW_NODE3}"
+    BMC_PW_NODE4="${BMC_PW_NODE4}"
+    BMC_PW_NODE5="${BMC_PW_NODE5}"
+    BMC_PW_NODE6="${BMC_PW_NODE6}"
+    MAC_NODE1="${MAC_NODE1}"
+    MAC_NODE2="${MAC_NODE2}"
+    MAC_NODE3="${MAC_NODE3}"
+    MAC_NODE4="${MAC_NODE4}"
+    MAC_NODE5="${MAC_NODE5}"
+    MAC_NODE6="${MAC_NODE6}"
+    HW_NODE1="${HW_NODE1}"
+    HW_NODE2="${HW_NODE2}"
+    HW_NODE3="${HW_NODE3}"
+    HW_NODE4="${HW_NODE4}"
+    HW_NODE5="${HW_NODE5}"
+    HW_NODE6="${HW_NODE6}"
+    KS_NODE1="${KS_NODE1}"
+    KS_NODE2="${KS_NODE2}"
+    KS_NODE3="${KS_NODE3}"
+    KS_NODE4="${KS_NODE4}"
+    KS_NODE5="${KS_NODE5}"
+    KS_NODE6="${KS_NODE6}"
+    RES_NODE1="${RES_NODE1}"
+    RES_NODE2="${RES_NODE2}"
+    RES_NODE3="${RES_NODE3}"
+    RES_NODE4="${RES_NODE4}"
+    RES_NODE5="${RES_NODE5}"
+    RES_NODE6="${RES_NODE6}"
+    NAME_NODE1="${NAME_NODE1}"
+    NAME_NODE2="${NAME_NODE2}"
+    NAME_NODE3="${NAME_NODE3}"
+    NAME_NODE4="${NAME_NODE4}"
+    NAME_NODE5="${NAME_NODE5}"
+    NAME_NODE6="${NAME_NODE6}"
+EOVARS
+
+}
+
+# ---
+
+node_settings () {
+
+    echo "[NODE SETTINGS] (mode/ip/mac/hw/ks/resource/bmc/hostname)"
+
+    echo "    Node1  : ${NICMODE_NODE1} / ${ADDR_NODE1} / ${MAC_NODE1} / ${HW_NODE1} / ${KS_NODE1} / ${RES_NODE1} / ${BMC_NODE1} / ${NAME_NODE1}"
+    echo "    Node2  : ${NICMODE_NODE2} / ${ADDR_NODE2} / ${MAC_NODE2} / ${HW_NODE2} / ${KS_NODE2} / ${RES_NODE2} / ${BMC_NODE2} / ${NAME_NODE2}"
+    echo "    Node3  : ${NICMODE_NODE3} / ${ADDR_NODE3} / ${MAC_NODE3} / ${HW_NODE3} / ${KS_NODE3} / ${RES_NODE3} / ${BMC_NODE3} / ${NAME_NODE3}"
+    echo "    Node4  : ${NICMODE_NODE4} / ${ADDR_NODE4} / ${MAC_NODE4} / ${HW_NODE4} / ${KS_NODE4} / ${RES_NODE4} / ${BMC_NODE4} / ${NAME_NODE4}"
+    echo "    Node5  : ${NICMODE_NODE5} / ${ADDR_NODE5} / ${MAC_NODE5} / ${HW_NODE5} / ${KS_NODE5} / ${RES_NODE5} / ${BMC_NODE5} / ${NAME_NODE5}"
+    echo "    Node6  : ${NICMODE_NODE6} / ${ADDR_NODE6} / ${MAC_NODE6} / ${HW_NODE6} / ${KS_NODE6} / ${RES_NODE6} / ${BMC_NODE6} / ${NAME_NODE6}"
+
+}
+
+# ---
+
+node_submenu () {
+
+    NODE="$1"
+
+    SAVED_PROMPT2="$PS3"
+
+    PS3="$NODE SETTINGS (Select Action): "
+
+    echo "----------"
+    echo ""
+
+    node_settings
+
+    echo ""
+
+    select action in "RETURN to previous menu" "Set Name" "Set NIC Mode" "Set IP Address" "Set MAC Address" "Set Hardware" "Set Kickstart" "Set Resources" "Set BMC Address" "Set BMC Password" "Delete Node"
+    do
+      case ${action}  in
+        "Set Name")
+          MAGIC_VAR="NAME_$NODE"
+          read -p "Enter Node Name [${!MAGIC_VAR}]: " input
+          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          ;;
+        "Set Hardware")
+          MAGIC_VAR="HW_$NODE"
+          read -p "Enter Hardware Profile [${!MAGIC_VAR}]: " input
+          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          ;;
+        "Set Kickstart")
+          MAGIC_VAR="KS_$NODE"
+          read -p "Enter Kickstart Profile [${!MAGIC_VAR}]: " input
+          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          ;;
+        "Set Resources")
+          MAGIC_VAR="RES_$NODE"
+          read -p "Enter Resource Profile [${!MAGIC_VAR}]: " input
+          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          ;;
+        "Set IP Address")
+          MAGIC_VAR="ADDR_$NODE"
+          read -p "Enter IP Address [${!MAGIC_VAR}]: " input
+          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          ;;
+        "Set NIC Mode")
+          select NIC_MODE in "static" "dhcp"
+          do
+            case ${NIC_MODE} in
+              "static" | "dhcp" )
+                MAGIC_VAR="NICMODE_$NODE"
+                eval ${MAGIC_VAR}=${NIC_MODE}
+                break ;;
+              "*" )
+                 ;;
+             esac
+             REPLY=
+           done
+           ;;
+        "Set MAC Address")
+          MAGIC_VAR="MAC_$NODE"
+          read -p "Enter MAC Address [${!MAGIC_VAR}]: " input
+          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          ;;
+        "Set BMC Address")
+          MAGIC_VAR="BMC_$NODE"
+          read -p "Enter BMC Address [${!MAGIC_VAR}]: " input
+          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          ;;
+        "Set BMC UID")
+          MAGIC_VAR="BMC_UID_$NODE"
+          read -p "Enter BMC User ID [${!MAGIC_VAR}]: " input
+          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          ;;
+        "Set BMC Password")
+          MAGIC_VAR="BMC_PW_$NODE"
+          echo "Enter new password and press Enter"
+          read -s -p "Enter bmc password [${!MAGIC_VAR:+**********}]: " input
+          echo ""
+          read -s -p "Enter bmc password again [${!MAGIC_VAR:+**********}]: " input2
+          echo ""
+
+          if [[ "$input" == "$input2" ]]; then
+            eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          else
+            echo "WARNING: Passwords do not match ... unchanged"
+          fi
+          ;;
+        "Delete Node")
+          read -p "DELETE $NODE ... ARE YOU SURE (Y/N): " input
+          if [[ "$input" == "Y" ]]; then
+            for MAGIC_VAR in HW_$NODE ADDR_$NODE MAC_$NODE BMC_$NODE BMC_PW_$NODE KS_$NODE NAME_$NODE; do
+              eval ${MAGIC_VAR}=""
+            done
+          fi
+          ;;
+        "RETURN to previous menu")
+          PS3=${SAVED_PROMPT2}
+          break
+          ;;
+        "*")
+          echo "That's NOT an option, try again..."
+          ;;
+      esac
+
+      ##
+      ##    Reprint the current settings
+      ##
+
+      node_settings
+
+
+      ##
+      ##    The following causes the select
+      ##    statement to reprint the menu
+      ##
+
+      REPLY=
+
+    done
+
+}
+
+# ---
+
+node_menu () {
+
+    SAVED_PROMPT="$PS3"
+
+    PS3="NODE SETTINGS (select node): "
+
+    node_settings
+
+    select action in "RETURN to previous menu" "Node1" "Node2" "Node3" "Node4" "Node5" "Node6"
+    do
+      case ${action}  in
+        "Node1")
+          node_submenu NODE1
+          ;;
+        "Node2")
+          node_submenu NODE2
+          ;;
+        "Node3")
+          node_submenu NODE3
+          ;;
+        "Node4")
+          node_submenu NODE4
+          ;;
+        "Node5")
+          node_submenu NODE5
+          ;;
+        "Node6")
+          node_submenu NODE6
+          ;;
+        "RETURN to previous menu")
+          PS3=${SAVED_PROMPT}
+          break
+          ;;
+        "*")
+          echo "That's NOT an option, try again..."
+          ;;
+      esac
+
+      ##
+      ##    Reprint the current settings
+      ##
+
+      node_settings
+
+      ##
+      ##    The following causes the select
+      ##    statement to reprint the menu
+      ##
+
+      REPLY=
+
+    done
+
+}
+
+
+

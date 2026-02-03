@@ -1,0 +1,53 @@
+---
+
+
+##
+##    Place to play and validate variables and hashes before
+##    implementing in official project var files
+##
+
+
+- hosts: localhost
+  tasks:
+
+  - name: "Dump the entire sat6_attribs hash"
+    debug:
+      var: sat6_attribs
+
+  - name: "Sample of addressing individual key / value"
+    debug:
+      var: sat6_attribs[sat6_version].ks_for_server
+
+
+
+  - name: "Dump the entire sat6_testvars hash"
+    debug: 
+      var: sat6_testvars
+
+  - name: "Sample of iterating through version numbers"
+    debug:
+      msg: "{{ item }}"
+    with_items: 
+      - "{{ sat6_testvars | flatten }}"
+
+  - name: "Sample of iterating through versions to get specific value"
+    debug:
+      msg: "{{ item }} fake_var = {{ sat6_testvars[item].fake_var }}"
+    with_items: 
+      - "{{ sat6_testvars | flatten }}"
+
+  - name: "Sample of converting a list of items into a string"
+    debug: 
+      msg: "sat6_testvars[sat6_version].fake_list | join(',') = {{sat6_testvars[sat6_version].fake_list | join(',') }}"
+
+  - name: "Combine lists"
+    debug:
+      msg: "{{ sat6_list1 + sat6_list2 }}"
+
+  - name: "First element of combined lists"
+    debug:
+      msg: "{{ ( sat6_list1 + sat6_list2 ) | first }}"
+
+
+  vars:
+    - sat6_version: "6.18"

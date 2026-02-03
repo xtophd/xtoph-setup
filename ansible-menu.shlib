@@ -1,0 +1,104 @@
+
+export ANSIBLE_SOURCE=""
+export ANSIBLE_IP=""
+export ANSIBLE_VAULT_PW=""
+
+##
+## --
+##
+
+ansible_dump () {
+
+cat <<EOVARS
+
+    ANSIBLE_SOURCE="${ANSIBLE_SOURCE}"
+    ANSIBLE_IP="${ANSIBLE_IP}"
+    ANSIBLE_VAULT_PW=""
+EOVARS
+
+}
+
+##
+## --
+##
+
+ansible_settings () {
+
+    echo "[ ANSIBLE ]"
+    echo "    Source       ... ${ANSIBLE_SOURCE}"
+    echo "    Ctrl Host IP ... ${ANSIBLE_IP}"
+
+}
+
+##
+## --
+##
+
+ansible_menu () {
+
+    SAVED_PROMPT="$PS3"
+
+    PS3="ANSIBLE SETTINGS: "
+
+    echo "----------"
+    echo ""
+
+    ansible_settings
+
+    echo ""
+
+    select action in "RETURN to previous menu" "Set Ansible Source" "Set Control Host IP"
+    do
+      case ${action}  in
+        "Set Ansible Source")
+          if [[ "${ANSIBLE_SOURCE}" == "INSTALLED" ]]; then
+            echo ""
+            echo "NOTE: Ansible is already installed"
+          else
+            select ANSIBLE_SOURCE in "EPEL" "RHSM"
+            do
+              case ${ANSIBLE_SOURCE} in
+                "EPEL" )
+                  break ;;
+                "RHSM" )
+                  break ;;
+                "*" )
+                  ;;
+              esac
+              REPLY=
+            done
+          fi
+          ;;
+
+        "Set Control Host IP")
+          read -p "Enter network id [${ANSIBLE_IP}]: " input
+          ANSIBLE_IP=${input:-$ANSIBLE_IP}
+          ;;
+
+        "RETURN to previous menu")
+          PS3=${SAVED_PROMPT}
+          break
+          ;;
+
+        "*")
+          echo "That's NOT an option, try again..."
+          ;;
+      esac
+
+      ##
+      ##    Reprint the current settings
+      ##
+
+      ansible_settings
+
+      ##
+      ##    The following causes the select
+      ##    statement to reprint the menu
+      ##
+
+      REPLY=
+
+    done
+
+}
+
