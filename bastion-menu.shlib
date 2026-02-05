@@ -1,0 +1,170 @@
+
+export BASTION_DNS=""
+export BASTION_DHCP=""
+export BASTION_HAPROXY=""
+export BASTION_NTP=""
+export BASTION_NFS=""
+export BASTION_SQUID=""
+
+##
+## --
+##
+
+bastion_dump () {
+
+cat <<EOVARS
+
+    BASTION_DNS="${BASTION_DNS}"
+    BASTION_DHCP="${BASTION_DHCP}"
+    BASTION_HAPROXY="${BASTION_HAPROXY}"
+    BASTION_NTP="${BASTION_NTP}"
+    BASTION_NFS="${BASTION_NFS}"
+    BASTION_SQUID="${BASTION_SQUID}"
+EOVARS
+
+}
+
+##
+## --
+##
+
+bastion_settings () {
+
+    echo "[ BASTION ]"
+    printf "    %-7s / %-7s / %-7s / %-7s / %-7s / %-7s\n" dns dhcp haproxy ntp nfs squid
+    printf "    %-7s   %-7s   %-7s   %-7s   %-7s   %-7s\n" ${BASTION_DNS} ${BASTION_DHCP} ${BASTION_HAPROXY} ${BASTION_NTP} ${BASTION_NFS} ${BASTION_SQUID}
+
+}
+
+##
+## --
+##
+
+bastion_menu () {
+
+    SAVED_PROMPT="$PS3"
+
+    PS3="BASTION MENU: "
+
+    current_settings
+
+    select action in "RETURN to previous menu" "Set DNS" "Set DHCP" "Set HAPROXY" "Set NTP" "Set NFS" "Set SQUID"
+    do
+      case ${action}  in
+        "Set DNS")
+          select BASTION_DNS in "True" "False"
+            do
+              case ${BASTION_DNS} in
+                "True" )
+                  break ;;
+                "False" )
+                  break ;;
+                "*" )
+                  ;;
+              esac
+              REPLY=
+            done
+          ;;
+
+        "Set DHCP")
+          select BASTION_DHCP in "True" "False"
+            do
+              case ${BASTION_DHCP} in
+                "True" )
+                  break ;;
+                "False" )
+                  break ;;
+                "*" )
+                  ;;
+              esac
+              REPLY=
+            done
+          ;;
+
+        "Set HAPROXY")
+          select BASTION_HAPROXY in "True" "False"
+            do
+              case ${BASTION_HAPROXY} in
+                "True" )
+                  break ;;
+                "False" )
+                  break ;;
+                "*" )
+                  ;;
+              esac
+              REPLY=
+            done
+          ;;
+        "Set NTP")
+          select BASTION_NTP in "True" "False"
+            do
+              case ${BASTION_NTP} in
+                "True" )
+                  break ;;
+                "False" )
+                  break ;;
+                "*" )
+                  ;;
+              esac
+              REPLY=
+            done
+          ;;
+
+        "Set NFS")
+          select BASTION_NFS in "True" "False"
+            do
+              case ${BASTION_NFS} in
+                "True" )
+                  break ;;
+                "False" )
+                  break ;;
+                "*" )
+                  ;;
+              esac
+              REPLY=
+            done
+          ;;
+
+        "Set SQUID")
+          select BASTION_SQUID in "True" "False"
+            do
+              case ${BASTION_SQUID} in
+                "True" )
+                  break ;;
+                "False" )
+                  break ;;
+                "*" )
+                  ;;
+              esac
+              REPLY=
+            done
+          ;;
+
+        "RETURN to previous menu")
+          PS3=${SAVED_PROMPT}
+          break
+          ;;
+
+        "*")
+          echo "That's NOT an option, try again..."
+          ;;
+
+      esac
+
+      ##
+      ##    Reprint the current settings
+      ##
+
+      bastion_settings
+
+      ##
+      ##    The following causes the select
+      ##    statement to reprint the menu
+      ##
+
+      REPLY=
+
+    done
+
+}
+
