@@ -1,186 +1,81 @@
 
-export ADDR_NODE1=""
-export ADDR_NODE2=""
-export ADDR_NODE3=""
-export ADDR_NODE4=""
-export ADDR_NODE5=""
-export ADDR_NODE6=""
-export ADDR_NODE7=""
-export ADDR_NODE8=""
-export NICMODE_NODE1="dhcp"
-export NICMODE_NODE2="dhcp"
-export NICMODE_NODE3="dhcp"
-export NICMODE_NODE4="dhcp"
-export NICMODE_NODE5="dhcp"
-export NICMODE_NODE6="dhcp"
-export NICMODE_NODE7="dhcp"
-export NICMODE_NODE8="dhcp"
-export BMC_NODE1=""
-export BMC_NODE2=""
-export BMC_NODE3=""
-export BMC_NODE4=""
-export BMC_NODE5=""
-export BMC_NODE6=""
-export BMC_NODE7=""
-export BMC_NODE8=""
-export BMC_UID_NODE1=""
-export BMC_UID_NODE2=""
-export BMC_UID_NODE3=""
-export BMC_UID_NODE4=""
-export BMC_UID_NODE5=""
-export BMC_UID_NODE6=""
-export BMC_UID_NODE7=""
-export BMC_UID_NODE8=""
-export BMC_PW_NODE1=""
-export BMC_PW_NODE2=""
-export BMC_PW_NODE3=""
-export BMC_PW_NODE4=""
-export BMC_PW_NODE5=""
-export BMC_PW_NODE6=""
-export BMC_PW_NODE7=""
-export BMC_PW_NODE8=""
-export MAC_NODE1=""
-export MAC_NODE2=""
-export MAC_NODE3=""
-export MAC_NODE4=""
-export MAC_NODE5=""
-export MAC_NODE6=""
-export MAC_NODE7=""
-export MAC_NODE8=""
-export HW_NODE1=""
-export HW_NODE2=""
-export HW_NODE3=""
-export HW_NODE4=""
-export HW_NODE5=""
-export HW_NODE6=""
-export HW_NODE7=""
-export HW_NODE8=""
-export KS_NODE1=""
-export KS_NODE2=""
-export KS_NODE3=""
-export KS_NODE4=""
-export KS_NODE5=""
-export KS_NODE6=""
-export KS_NODE7=""
-export KS_NODE8=""
-export RES_NODE1=""
-export RES_NODE2=""
-export RES_NODE3=""
-export RES_NODE4=""
-export RES_NODE5=""
-export RES_NODE6=""
-export RES_NODE7=""
-export RES_NODE8=""
-export NAME_NODE1=""
-export NAME_NODE2=""
-export NAME_NODE3=""
-export NAME_NODE4=""
-export NAME_NODE5=""
-export NAME_NODE6=""
-export NAME_NODE7=""
-export NAME_NODE8=""
+export NAME_NODE{1..9}=""
+export ADDR_NODE{1..9}=""
+export NICMODE_NODE{1..9}=""
+export BMC_NODE{1..9}=""
+export BMC_UID_NODE{1..9}=""
+export BMC_PW_NODE{1..9}=""
+export MAC_NODE{1..9}=""
+export HW_NODE{1..9}=""
+export KS_NODE{1..9}=""
+export RES_NODE{1..9}=""
+export HGROUP_NODE{1..9}=""
 
+export BMC_PW_DEFAULT=""
+export BMC_UID_DEFAUT=""
 
 # ---
 
 node_dump () {
 
-cat <<EOVARS
+    echo ""
+    echo "## NODE SETTINGS"
+    echo ""
 
-    BMC_PW_DEFAULT=""
+    for i in {1..9}; do
 
-    BMC_UID_DEFAULT="${BMC_UID_DEFAULT}"
+      ##   NOTE:
+      ##
+      ##       Took a while to get this right, watch the variable and quote expansion carefully
+      ##
+
+      node="$i"
+      name="NAME_NODE$i"
+      mode="NICMODE_NODE$i"
+      addr="ADDR_NODE$i"
+      mac="MAC_NODE$i"
+      hw="HW_NODE$i"
+      ks="KS_NODE$i"
+      res="RES_NODE$i"
+      bmc="BMC_NODE$i"
+      hg="HGROUP_NODE$i"
+ 
+      eval printf \''    %s="%s"\n'\'  'NAME_NODE${node}'    \"\$${name}\" 
+      eval printf \''    %s="%s"\n'\'  'NICMODE_NODE${node}' \"\$${mode}\" 
+      eval printf \''    %s="%s"\n'\'  'ADDR_NODE${node}'    \"\$${addr}\" 
+      eval printf \''    %s="%s"\n'\'  'MAC_NODE${node}'     \"\$${mac}\" 
+      eval printf \''    %s="%s"\n'\'  'HW_NODE${node}'      \"\$${hw}\" 
+      eval printf \''    %s="%s"\n'\'  'KS_NODE${node}'      \"\$${ks}\" 
+      eval printf \''    %s="%s"\n'\'  'RES_NODE${node}'     \"\$${res}\" 
+      eval printf \''    %s="%s"\n'\'  'BMC_NODE${node}'     \"\$${bmc}\" 
+      eval printf \''    %s="%s"\n'\'  'HGROUP_NODE${node}'  \"\$${hg}\" 
+
+      echo ""
+    done
+
+    echo "    BMC_PW_DEFAULT=\"\""
+    echo "    BMC_UID_DEFAULT=\"${BMC_UID_DEFAULT}\""
+
+}
+
+# ---
+
+node_bulk_edit () {
+
+    TMPFILE="$(mktemp /var/tmp/ocp-workshop-setup.XXXXX)"
+
+    node_dump > $TMPFILE
+
+    vi $TMPFILE
+
+    read -p "Accept BULK EDIT update (Y/N)? " input
+
+    if [[ "${input^^}" == "Y" ]]; then
+      source $TMPFILE
+      echo "Changes sourced..."
+    fi 
     
-    ADDR_NODE1="${ADDR_NODE1}"
-    ADDR_NODE2="${ADDR_NODE2}"
-    ADDR_NODE3="${ADDR_NODE3}"
-    ADDR_NODE4="${ADDR_NODE4}"
-    ADDR_NODE5="${ADDR_NODE5}"
-    ADDR_NODE6="${ADDR_NODE6}"
-    ADDR_NODE7="${ADDR_NODE7}"
-    ADDR_NODE8="${ADDR_NODE8}"
-
-    NICMODE_NODE1="${NICMODE_NODE1}"
-    NICMODE_NODE2="${NICMODE_NODE2}"
-    NICMODE_NODE3="${NICMODE_NODE3}"
-    NICMODE_NODE4="${NICMODE_NODE4}"
-    NICMODE_NODE5="${NICMODE_NODE5}"
-    NICMODE_NODE6="${NICMODE_NODE6}"
-    NICMODE_NODE7="${NICMODE_NODE7}"
-    NICMODE_NODE8="${NICMODE_NODE8}"
-
-    BMC_NODE1="${BMC_NODE1}"
-    BMC_NODE2="${BMC_NODE2}"
-    BMC_NODE3="${BMC_NODE3}"
-    BMC_NODE4="${BMC_NODE4}"
-    BMC_NODE5="${BMC_NODE5}"
-    BMC_NODE6="${BMC_NODE6}"
-    BMC_NODE7="${BMC_NODE7}"
-    BMC_NODE8="${BMC_NODE8}"
-
-    BMC_UID_NODE1="${BMC_UID_NODE1}"
-    BMC_UID_NODE2="${BMC_UID_NODE2}"
-    BMC_UID_NODE3="${BMC_UID_NODE3}"
-    BMC_UID_NODE4="${BMC_UID_NODE4}"
-    BMC_UID_NODE5="${BMC_UID_NODE5}"
-    BMC_UID_NODE6="${BMC_UID_NODE6}"
-    BMC_UID_NODE7="${BMC_UID_NODE7}"
-    BMC_UID_NODE8="${BMC_UID_NODE8}"
-
-    BMC_PW_NODE1="${BMC_PW_NODE1}"
-    BMC_PW_NODE2="${BMC_PW_NODE2}"
-    BMC_PW_NODE3="${BMC_PW_NODE3}"
-    BMC_PW_NODE4="${BMC_PW_NODE4}"
-    BMC_PW_NODE5="${BMC_PW_NODE5}"
-    BMC_PW_NODE6="${BMC_PW_NODE6}"
-    BMC_PW_NODE7="${BMC_PW_NODE7}"
-    BMC_PW_NODE8="${BMC_PW_NODE8}"
-
-    MAC_NODE1="${MAC_NODE1}"
-    MAC_NODE2="${MAC_NODE2}"
-    MAC_NODE3="${MAC_NODE3}"
-    MAC_NODE4="${MAC_NODE4}"
-    MAC_NODE5="${MAC_NODE5}"
-    MAC_NODE6="${MAC_NODE6}"
-    MAC_NODE7="${MAC_NODE7}"
-    MAC_NODE8="${MAC_NODE8}"
-
-    HW_NODE1="${HW_NODE1}"
-    HW_NODE2="${HW_NODE2}"
-    HW_NODE3="${HW_NODE3}"
-    HW_NODE4="${HW_NODE4}"
-    HW_NODE5="${HW_NODE5}"
-    HW_NODE6="${HW_NODE6}"
-    HW_NODE7="${HW_NODE7}"
-    HW_NODE8="${HW_NODE8}"
-
-    KS_NODE1="${KS_NODE1}"
-    KS_NODE2="${KS_NODE2}"
-    KS_NODE3="${KS_NODE3}"
-    KS_NODE4="${KS_NODE4}"
-    KS_NODE5="${KS_NODE5}"
-    KS_NODE6="${KS_NODE6}"
-    KS_NODE7="${KS_NODE7}"
-    KS_NODE8="${KS_NODE8}"
-
-    RES_NODE1="${RES_NODE1}"
-    RES_NODE2="${RES_NODE2}"
-    RES_NODE3="${RES_NODE3}"
-    RES_NODE4="${RES_NODE4}"
-    RES_NODE5="${RES_NODE5}"
-    RES_NODE6="${RES_NODE6}"
-    RES_NODE7="${RES_NODE7}"
-    RES_NODE8="${RES_NODE8}"
-
-    NAME_NODE1="${NAME_NODE1}"
-    NAME_NODE2="${NAME_NODE2}"
-    NAME_NODE3="${NAME_NODE3}"
-    NAME_NODE4="${NAME_NODE4}"
-    NAME_NODE5="${NAME_NODE5}"
-    NAME_NODE6="${NAME_NODE6}"
-    NAME_NODE7="${NAME_NODE7}"
-    NAME_NODE8="${NAME_NODE8}"
-EOVARS
+    rm $TMPFILE
 
 }
 
@@ -188,16 +83,43 @@ EOVARS
 
 node_settings () {
 
-    echo "[NODE SETTINGS] (mode/ip/mac/hw/ks/resource/bmc/hostname)"
+    echo "[NODE SETTINGS]"
 
-    echo "    Node1  : ${NICMODE_NODE1} / ${ADDR_NODE1} / ${MAC_NODE1} / ${HW_NODE1} / ${KS_NODE1} / ${RES_NODE1} / ${BMC_NODE1} / ${NAME_NODE1}"
-    echo "    Node2  : ${NICMODE_NODE2} / ${ADDR_NODE2} / ${MAC_NODE2} / ${HW_NODE2} / ${KS_NODE2} / ${RES_NODE2} / ${BMC_NODE2} / ${NAME_NODE2}"
-    echo "    Node3  : ${NICMODE_NODE3} / ${ADDR_NODE3} / ${MAC_NODE3} / ${HW_NODE3} / ${KS_NODE3} / ${RES_NODE3} / ${BMC_NODE3} / ${NAME_NODE3}"
-    echo "    Node4  : ${NICMODE_NODE4} / ${ADDR_NODE4} / ${MAC_NODE4} / ${HW_NODE4} / ${KS_NODE4} / ${RES_NODE4} / ${BMC_NODE4} / ${NAME_NODE4}"
-    echo "    Node5  : ${NICMODE_NODE5} / ${ADDR_NODE5} / ${MAC_NODE5} / ${HW_NODE5} / ${KS_NODE5} / ${RES_NODE5} / ${BMC_NODE5} / ${NAME_NODE5}"
-    echo "    Node6  : ${NICMODE_NODE6} / ${ADDR_NODE6} / ${MAC_NODE6} / ${HW_NODE6} / ${KS_NODE6} / ${RES_NODE6} / ${BMC_NODE6} / ${NAME_NODE6}"
-    echo "    Node7  : ${NICMODE_NODE7} / ${ADDR_NODE7} / ${MAC_NODE7} / ${HW_NODE7} / ${KS_NODE7} / ${RES_NODE7} / ${BMC_NODE7} / ${NAME_NODE7}"
-    echo "    Node8  : ${NICMODE_NODE8} / ${ADDR_NODE8} / ${MAC_NODE8} / ${HW_NODE8} / ${KS_NODE8} / ${RES_NODE8} / ${BMC_NODE8} / ${NAME_NODE8}"
+    format="    %-4s|%-10s|%-6s|%-15s|%-17s|%-10s|%-10s|%-10s|%-10s|%-15s\n"
+
+    printf "$format" Node Name Mode Addr Mac HW KS Res BMC HostGroup
+
+    for i in {1..9}; do
+
+      ##   NOTE:
+      ##
+      ##       Took a while to get this right, watch the variable and quote expansion carefully
+      ##
+
+      node="$i"
+      name="NAME_NODE$i"
+      mode="NICMODE_NODE$i"
+      addr="ADDR_NODE$i"
+      mac="MAC_NODE$i"
+      hw="HW_NODE$i"
+      ks="KS_NODE$i"
+      res="RES_NODE$i"
+      bmc="BMC_NODE$i"
+      hg="HGROUP_NODE$i"
+
+      eval printf \""${format}"\" \
+             '${node}' \
+             \"\$${name}\" \
+             \"\$${mode}\" \
+             \"\$${addr}\" \
+             \"\$${mac}\" \
+             \"\$${hw}\" \
+             \"\$${ks}\" \
+             \"\$${res}\" \
+             \"\$${bmc}\" \
+             \"\$${hg}\"
+
+    done
 
 }
 
@@ -211,14 +133,10 @@ node_submenu () {
 
     PS3="$NODE SETTINGS (Select Action): "
 
-    echo "----------"
-    echo ""
-
     node_settings
-
     echo ""
 
-    select action in "RETURN to previous menu" "Set Name" "Set NIC Mode" "Set IP Address" "Set MAC Address" "Set Hardware" "Set Kickstart" "Set Resources" "Set BMC Address" "Set BMC Password" "Delete Node"
+    select action in "RETURN to previous menu" "Set Name" "Set NIC Mode" "Set IP Address" "Set MAC Address" "Set Hardware" "Set Kickstart" "Set Resources" "Set BMC Address" "Set BMC Password" "Set Host Group" "Delete Node"
     do
       case ${action}  in
         "Set Name")
@@ -289,10 +207,15 @@ node_submenu () {
             echo "WARNING: Passwords do not match ... unchanged"
           fi
           ;;
+        "Set Host Group")
+          MAGIC_VAR="HGROUP_$NODE"
+          read -p "Enter Node Name [${!MAGIC_VAR}]: " input
+          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          ;;
         "Delete Node")
           read -p "DELETE $NODE ... ARE YOU SURE (Y/N): " input
           if [[ "$input" == "Y" ]]; then
-            for MAGIC_VAR in HW_$NODE ADDR_$NODE MAC_$NODE BMC_$NODE BMC_PW_$NODE KS_$NODE NAME_$NODE; do
+            for MAGIC_VAR in HW_$NODE ADDR_$NODE MAC_$NODE BMC_$NODE BMC_PW_$NODE KS_$NODE RES_$NODE NAME_$NODE; do
               eval ${MAGIC_VAR}=""
             done
           fi
@@ -311,7 +234,7 @@ node_submenu () {
       ##
 
       node_settings
-
+      echo ""
 
       ##
       ##    The following causes the select
@@ -332,35 +255,30 @@ node_menu () {
 
     PS3="NODE SETTINGS (select node): "
 
+    echo ""
+
     node_settings
 
-    select action in "RETURN to previous menu" "Node1" "Node2" "Node3" "Node4" "Node5" "Node6" "Node7" "Node8" 
+    echo ""
+
+    select action in "RETURN to previous menu" "BULK EDIT params" Node{1..9}
     do
       case ${action}  in
-        "Node1")
-          node_submenu NODE1
+
+        Node* )
+
+          ##    NOTE:
+          ##
+          ##        Using a wildcard for case match
+          ##        Using ^^ syntax on var name suffix converts it to uppercase
+
+          node_submenu ${action^^}
           ;;
-        "Node2")
-          node_submenu NODE2
+
+        "BULK EDIT params")
+          node_bulk_edit
           ;;
-        "Node3")
-          node_submenu NODE3
-          ;;
-        "Node4")
-          node_submenu NODE4
-          ;;
-        "Node5")
-          node_submenu NODE5
-          ;;
-        "Node6")
-          node_submenu NODE6
-          ;;
-        "Node7")
-          node_submenu NODE7
-          ;;
-        "Node8")
-          node_submenu NODE8
-          ;;
+
         "RETURN to previous menu")
           PS3=${SAVED_PROMPT}
           break
@@ -375,6 +293,7 @@ node_menu () {
       ##
 
       node_settings
+      echo ""
 
       ##
       ##    The following causes the select

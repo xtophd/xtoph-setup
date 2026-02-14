@@ -5,6 +5,7 @@ export BASTION_HAPROXY=""
 export BASTION_NTP=""
 export BASTION_NFS=""
 export BASTION_SQUID=""
+export BASTION_COCKPIT=""
 
 ##
 ## --
@@ -14,12 +15,15 @@ bastion_dump () {
 
 cat <<EOVARS
 
+## BASTION SETTINGS
+
     BASTION_DNS="${BASTION_DNS}"
     BASTION_DHCP="${BASTION_DHCP}"
     BASTION_HAPROXY="${BASTION_HAPROXY}"
     BASTION_NTP="${BASTION_NTP}"
     BASTION_NFS="${BASTION_NFS}"
     BASTION_SQUID="${BASTION_SQUID}"
+    BASTION_COCKPIT="${BASTION_SQUID}"
 EOVARS
 
 }
@@ -31,8 +35,8 @@ EOVARS
 bastion_settings () {
 
     echo "[ BASTION ]"
-    printf "    %-7s / %-7s / %-7s / %-7s / %-7s / %-7s\n" dns dhcp haproxy ntp nfs squid
-    printf "    %-7s   %-7s   %-7s   %-7s   %-7s   %-7s\n" ${BASTION_DNS} ${BASTION_DHCP} ${BASTION_HAPROXY} ${BASTION_NTP} ${BASTION_NFS} ${BASTION_SQUID}
+    printf "    %-7s / %-7s / %-7s / %-7s / %-7s / %-7s / %-7s\n" dns dhcp haproxy ntp nfs squid cockpit
+    printf "    %-7s   %-7s   %-7s   %-7s   %-7s   %-7s   %-7s\n" ${BASTION_DNS} ${BASTION_DHCP} ${BASTION_HAPROXY} ${BASTION_NTP} ${BASTION_NFS} ${BASTION_SQUID} ${BASTION_COCKPIT}
 
 }
 
@@ -48,7 +52,7 @@ bastion_menu () {
 
     current_settings
 
-    select action in "RETURN to previous menu" "Set DNS" "Set DHCP" "Set HAPROXY" "Set NTP" "Set NFS" "Set SQUID"
+    select action in "RETURN to previous menu" "Set DNS" "Set DHCP" "Set HAPROXY" "Set NTP" "Set NFS" "Set SQUID" "Set COCKPIT"
     do
       case ${action}  in
         "Set DNS")
@@ -129,6 +133,21 @@ bastion_menu () {
           select BASTION_SQUID in "True" "False"
             do
               case ${BASTION_SQUID} in
+                "True" )
+                  break ;;
+                "False" )
+                  break ;;
+                "*" )
+                  ;;
+              esac
+              REPLY=
+            done
+          ;;
+
+        "Set COCKPIT")
+          select BASTION_COCKPIT in "True" "False"
+            do
+              case ${BASTION_COCKPIT} in
                 "True" )
                   break ;;
                 "False" )

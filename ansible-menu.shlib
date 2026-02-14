@@ -11,6 +11,8 @@ ansible_dump () {
 
 cat <<EOVARS
 
+## ANSIBLE SETTINGS
+
     ANSIBLE_SOURCE="${ANSIBLE_SOURCE}"
     ANSIBLE_IP="${ANSIBLE_IP}"
     ANSIBLE_VAULT_PW=""
