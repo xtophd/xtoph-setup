@@ -1,7 +1,7 @@
 
 export ANSIBLE_SOURCE=""
 export ANSIBLE_IP=""
-export ANSIBLE_VAULT_PW=""
+export ANSIBLE_VAULT_PW
 
 ##
 ## --
@@ -15,7 +15,7 @@ cat <<EOVARS
 
     ANSIBLE_SOURCE="${ANSIBLE_SOURCE}"
     ANSIBLE_IP="${ANSIBLE_IP}"
-    ANSIBLE_VAULT_PW=""
+    ## ANSIBLE_VAULT_PW=""
 EOVARS
 
 }
@@ -27,8 +27,8 @@ EOVARS
 ansible_settings () {
 
     echo "[ ANSIBLE ]"
-    echo "    Source       ... ${ANSIBLE_SOURCE}"
-    echo "    Ctrl Host IP ... ${ANSIBLE_IP}"
+    printf "    %-${#ANSIBLE_SOURCE}s|%-${#ANSIBLE_IP}s|%s\n" "Source" "Ctrl Host IP" "Vault PW"
+    printf "    %-${#ANSIBLE_SOURCE}s|%-${#ANSIBLE_IP}s|%s\n" "${ANSIBLE_SOURCE}" "${ANSIBLE_IP}" "${ANSIBLE_VAULT_PW:+**********}"
 
 }
 
@@ -42,14 +42,14 @@ ansible_menu () {
 
     PS3="ANSIBLE SETTINGS: "
 
-    echo "----------"
     echo ""
-
     ansible_settings
-
     echo ""
 
-    select action in "RETURN to previous menu" "Set Ansible Source" "Set Control Host IP"
+    select action in "RETURN to previous menu" \
+                     "Set Ansible Source" \
+                     "Set Control Host IP" \
+                     "Set Vault Password"
     do
       case ${action}  in
         "Set Ansible Source")
@@ -77,6 +77,20 @@ ansible_menu () {
           ANSIBLE_IP=${input:-$ANSIBLE_IP}
           ;;
 
+        "Set Vault Password")
+          read -s -p "Enter ansible vault password [${ANSIBLE_VAULT_PW:+**********}]: " input
+          echo ""
+          read -s -p "Enter ansible vault password again [${ANSIBLLE_VAULT_PW:+**********}]: " input2
+          echo ""
+          echo ""
+
+          if [[ "$input" == "$input2" ]]; then
+            ANSIBLE_VAULT_PW=${input:-$ANSIBLE_VAULT_PW}
+          else
+            echo "WARNING: Passwords do not match ... unchanged"
+          fi
+          ;;
+
         "RETURN to previous menu")
           PS3=${SAVED_PROMPT}
           break
@@ -91,7 +105,9 @@ ansible_menu () {
       ##    Reprint the current settings
       ##
 
+      echo ""
       ansible_settings
+      echo ""
 
       ##
       ##    The following causes the select

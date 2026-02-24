@@ -1,0 +1,171 @@
+
+export LDAP=""
+export LDAP_URI=""
+export LDAP_BASE_DN=""
+export LDAP_BIND_DN=""
+export LDAP_SUDO_GRP=""
+export LDAP_BIND_PW
+
+##
+## --
+##
+
+ldap_dump () {
+
+cat <<EOVARS
+
+## LDAP SETTINGS
+
+    LDAP="${LDAP}"
+    LDAP_URI="${LDAP_URI}"
+    LDAP_BASE_DN="${LDAP_BASE_DN}"
+    LDAP_BIND_DN="${LDAP_BIND_DN}"
+    LDAP_SUDO_GRP="${LDAP_SUDO_GRP}"
+    ## LDAP_BIND_PW=""
+EOVARS
+
+}
+
+##
+## --
+##
+
+ldap_settings () {
+
+    echo "[ LDAP ]"
+    echo "    Enabled        ... ${LDAP}"
+    echo "    URI / Base DN  ... ${LDAP_URI} / ${LDAP_BASE_DN}"
+    echo "    Bind DN / PW   ... ${LDAP_BIND_DN} / ${LDAP_BIND_PW:+**********}"
+    echo "    Sudo Group     ... ${LDAP_SUDO_GRP}"
+
+}
+
+
+##
+## --
+##
+
+
+ldap_bulk_edit () {
+
+    TMPFILE="$(mktemp /var/tmp/ocp-workshop-setup.XXXXX)"
+
+    ldap_dump > $TMPFILE
+
+    vi $TMPFILE
+
+    read -p "Accept BULK EDIT update (Y/N)? " input
+
+    if [[ "${input^^}" == "Y" ]]; then
+      source $TMPFILE
+      echo "Changes sourced..."
+    fi
+
+    rm $TMPFILE
+
+}
+
+##
+## --
+##
+
+ldap_menu () {
+
+    SAVED_PROMPT="$PS3"
+
+    PS3="LDAP MENU: "
+
+    echo ""
+    
+    ldap_settings
+
+    echo ""
+
+    select action in "RETURN to previous menu" "BULK EDIT params" "Set Enabled" "Set URI" "Set BASE_DN" "Set BIND_DN" "Set BIND_PW" "Set SUDO_GRP"
+    do
+      case ${action}  in
+
+        "BULK EDIT params")
+          ldap_bulk_edit
+          ;;
+
+        "Set Enabled")
+          select LDAP in "True" "False"
+            do
+              case ${LDAP} in
+                "True" )
+                  break ;;
+                "False" )
+                  break ;;
+                "*" )
+                  ;;
+              esac
+              REPLY=
+            done
+          ;;
+
+        "Set URI")
+          read -p "Enter LDAP URI [${LDAP_URI}]: " input
+          LDAP_URI=${input:-$LDAP_URI}
+          ;;
+
+        "Set BASE_DN")
+          read -p "Enter LDAP DN [${LDAP_BASE_DN}]: " input
+          LDAP_BASE_DN=${input:-$LDAP_BASE_DN}
+          ;;
+
+        "Set BIND_DN")
+          read -p "Enter LDAP DN [${LDAP_BIND_DN}]: " input
+          LDAP_BIND_DN=${input:-$LDAP_BIND_DN}
+          ;;
+
+        "Set BIND_PW")
+          read -s -p "Enter BIND_PW [${LDAP_BIND_PW:+**********}]: " input
+          echo ""
+          read -s -p "Enter BIND_PW again [${LDAP_BIND_PW:+**********}]: " input2
+          echo ""
+          echo ""
+
+          if [[ "$input" == "$input2" ]]; then
+            LDAP_BIND_PW=${input:-$LDAP_BIND_PW}
+          else
+            echo "WARNING: Passwords do not match ... unchanged"
+          fi
+          ;;
+
+        "Set SUDO_GRP")
+          read -p "Enter LDAP Group for sudo access [${LDAP_SUDO_GRP}]: " input
+          LDAP_SUDO_GRP=${input:-$LDAP_SUDO_GRP}
+          ;;
+
+
+        "RETURN to previous menu")
+          PS3=${SAVED_PROMPT}
+          break
+          ;;
+
+        "*")
+          echo "That's NOT an option, try again..."
+          ;;
+
+      esac
+
+      ##
+      ##    Reprint the current settings
+      ##
+
+      echo ""
+      ldap_settings
+      echo ""
+
+      ##
+      ##    The following causes the select
+      ##    statement to reprint the menu
+      ##
+
+      REPLY=
+
+    done
+
+}
+

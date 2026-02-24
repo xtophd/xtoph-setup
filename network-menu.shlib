@@ -30,9 +30,9 @@ EOVARS
 
 }
 
-##
-## --
-##
+
+# --
+
 
 network_settings () {
 
@@ -48,9 +48,32 @@ network_settings () {
 
 }
 
-##
-## --
-##
+
+# --
+
+
+network_bulk_edit () {
+
+    TMPFILE="$(mktemp /var/tmp/ocp-workshop-setup.XXXXX)"
+
+    network_dump > $TMPFILE
+
+    vi $TMPFILE
+
+    read -p "Accept BULK EDIT update (Y/N)? " input
+
+    if [[ "${input^^}" == "Y" ]]; then
+      source $TMPFILE
+      echo "Changes sourced..."
+    fi
+
+    rm $TMPFILE
+
+}
+
+
+# --
+
 
 network_menu () {
 
@@ -58,16 +81,18 @@ network_menu () {
 
     PS3="NETWORK MENU: "
 
-    echo "----------"
     echo ""
-
     network_settings
-
     echo ""
 
-    select action in "RETURN to previous menu" "Set ID" "Set Prefix" "Set Gateway" "Set Base Domain" "Set DNS Server" "Set TIME Server" 
+    select action in "RETURN to previous menu" "BULK EDIT params" "Set ID" "Set Prefix" "Set Gateway" "Set Base Domain" "Set DNS Server" "Set TIME Server" 
     do
       case ${action}  in
+
+        "BULK EDIT params")
+          network_bulk_edit
+          ;;
+
         "Set ID")
           read -p "Enter network id [${NETWORK_ID}]: " input
           NETWORK_ID=${input:-$NETWORK_ID}
@@ -113,7 +138,9 @@ network_menu () {
       ##    Reprint the current settings
       ##
 
+      echo ""
       network_settings
+      echo ""
 
       ##
       ##    The following causes the select

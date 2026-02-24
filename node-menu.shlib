@@ -83,7 +83,7 @@ node_bulk_edit () {
 
 node_settings () {
 
-    echo "[NODE SETTINGS]"
+    echo "[ NODE SETTINGS ] "
 
     format="    %-4s|%-10s|%-6s|%-15s|%-17s|%-10s|%-10s|%-10s|%-10s|%-15s\n"
 
@@ -233,6 +233,7 @@ node_submenu () {
       ##    Reprint the current settings
       ##
 
+      echo ""
       node_settings
       echo ""
 
@@ -256,9 +257,7 @@ node_menu () {
     PS3="NODE SETTINGS (select node): "
 
     echo ""
-
     node_settings
-
     echo ""
 
     select action in "RETURN to previous menu" "BULK EDIT params" Node{1..9}
@@ -292,6 +291,7 @@ node_menu () {
       ##    Reprint the current settings
       ##
 
+      echo ""
       node_settings
       echo ""
 

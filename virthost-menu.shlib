@@ -1,5 +1,6 @@
-export VIRTHOST_PW=""
-export OVIRT_MANAGER_PW=""
+export VIRTHOST_PW
+export VIRTHOST_BMC_PW
+export OVIRT_MANAGER_PW
 
 export VIRTHOST_UID="root"
 export VIRTHOST_NICMODE="static"
@@ -33,17 +34,20 @@ export OVIRT_MACHINE=""
 virthost_dump () {
 
 cat <<EOVARS
+
+## VIRTHOST SETTINGS
       
-    VIRTHOST_PW=""
-    VIRTHOST_BMC_PW=""
-    OVIRT_MANAGER_PW=""
+    ##VIRTHOST_PW=""
+    ##VIRTHOST_BMC_PW=""
+    ##OVIRT_MANAGER_PW=""
+
+    VIRTHOST_TYPE="${VIRTHOST_TYPE}"
 
     VIRTHOST_UID="${VIRTHOST_UID}"
     VIRTHOST_NICMODE="${VIRTHOST_NICMODE}"
     VIRTHOST_IP="${VIRTHOST_IP}"
     VIRTHOST_MAC="${VIRTHOST_MAC}"
     VIRTHOST_FQDN="${VIRTHOST_FQDN}"
-    VIRTHOST_TYPE="${VIRTHOST_TYPE}"
     VIRTHOST_VTAP_DEV="${VIRTHOST_VTAP_DEV}"
     VIRTHOST_VTAP_VID="${VIRTHOST_VTAP_VID}"
     VIRTHOST_BR_TYPE="${VIRTHOST_BR_TYPE}"
@@ -64,29 +68,52 @@ cat <<EOVARS
 EOVARS
 }
 
-##
-## --
-##
+
+# --
+
+
+virthost_bulk_edit () {
+
+    TMPFILE="$(mktemp /var/tmp/ocp-workshop-setup.XXXXX)"
+
+    virthost_dump > $TMPFILE
+
+    vi $TMPFILE
+
+    read -p "Accept BULK EDIT update (Y/N)? " input
+
+    if [[ "${input^^}" == "Y" ]]; then
+      source $TMPFILE
+      echo "Changes sourced..."
+    fi
+
+    rm $TMPFILE
+
+}
+
+
+# ---
+
 
 virthost_settings () {
 
     echo "[ VIRT HOST ]"
-        echo "    vHost Type                  ... ${VIRTHOST_TYPE}"
+        echo "    vHost Type            ... ${VIRTHOST_TYPE}"
     if [[ ! -z ${VIRTHOST_TYPE} && "${VIRTHOST_TYPE}" == "ovirt" ]]; then
-        echo "    oVirt API (ip/fqdn)         ... ${OVIRT_MANAGER_IP} / ${OVIRT_MANAGER_FQDN}"
-        echo "              (uid/pw)          ... ${OVIRT_MANAGER_UID} / pw-set-in-vault"
-        echo "          Datacenter            ... ${OVIRT_DATACENTER}"
-        echo "          Storage Domain        ... ${OVIRT_STORAGE_DOMAIN}"
-        echo "          Network Domain        ... ${OVIRT_NETWORK_DOMAIN}"
-        echo "          VM machine            ... ${OVIRT_MACHINE}"
+        echo "    oVirt API (ip/fqdn)   ... ${OVIRT_MANAGER_IP} / ${OVIRT_MANAGER_FQDN}"
+        echo "              (uid/pw)    ... ${OVIRT_MANAGER_UID} / ${OVIRT_MANAGER_PW:+**********}"
+        echo "          Datacenter      ... ${OVIRT_DATACENTER}"
+        echo "          Storage Domain  ... ${OVIRT_STORAGE_DOMAIN}"
+        echo "          Network Domain  ... ${OVIRT_NETWORK_DOMAIN}"
+        echo "          VM machine      ... ${OVIRT_MACHINE}"
     elif [[ ! -z ${VIRTHOST_TYPE} && "${VIRTHOST_TYPE}" == "libvirt" ]]; then
-        echo "    lVirt Host   (ip/fqdn/mode) ... ${VIRTHOST_IP} / ${VIRTHOST_FQDN} / ${VIRTHOST_NICMODE}"
-        echo "                 (uid/pw)       ... ${VIRTHOST_UID} / pw-set-in-vault" 
-        echo "                 (mac/hw/ks)    ... ${VIRTHOST_MAC} / ${VIRTHOST_HW} / ${VIRTHOST_KS}"
-        echo "          BRIDGE (type/dev)     ... ${VIRTHOST_BR_TYPE} / ${VIRTHOST_BR_DEV}"
-        echo "          VTAP   (dev/vlan-id)  ... ${VIRTHOST_VTAP_DEV} / ${VIRTHOST_VTAP_VID}"
-        echo "          VM     (machine)      ... ${VIRTHOST_MACHINE}"
-        echo "          BMC    (ip/uid/pw)    ... ${VIRTHOST_BMC} / ${VIRTHOST_BMC_UID} / pw-set-in-vault"
+        echo "    Host   (ip/fqdn/mode) ... ${VIRTHOST_IP} / ${VIRTHOST_FQDN} / ${VIRTHOST_NICMODE}"
+        echo "           (mac/hw/ks)    ... ${VIRTHOST_MAC} / ${VIRTHOST_HW} / ${VIRTHOST_KS}"
+        echo "           (uid/pw)       ... ${VIRTHOST_UID} / ${VIRTHOST_PW:+**********}" 
+        echo "    BRIDGE (type/dev)     ... ${VIRTHOST_BR_TYPE} / ${VIRTHOST_BR_DEV}"
+        echo "    VTAP   (dev/vlan-id)  ... ${VIRTHOST_VTAP_DEV} / ${VIRTHOST_VTAP_VID}"
+        echo "    Default VM (machine)  ... ${VIRTHOST_MACHINE}"
+        echo "    BMC    (fqdn/uid/pw)  ... ${VIRTHOST_BMC} / ${VIRTHOST_BMC_UID} / ${VIRTHOST_BMC_PW:+**********}"
     fi
 
 }
@@ -101,11 +128,9 @@ virthost_menu () {
 
     PS3="VIRT HOST MENU: "
 
-    echo "----------"
+
     echo ""
-
     virthost_settings
-
     echo ""
 
     action=""
@@ -114,27 +139,72 @@ virthost_menu () {
     do
 
       if [[ ! -z ${VIRTHOST_TYPE} && "${VIRTHOST_TYPE}" == "ovirt" ]]; then
-        TYPE_ACTIONS=("Set Manager IP" "Set Manager FQDN" "Set Datacenter" "Set Storage Domain" "Set Network Domain" "Set VM Type" "Clear vHost Settings")
+        TYPE_ACTIONS=("Set Manager IP" "Set Manager FQDN" "Set Datacenter" "Set Storage Domain" "Set Network Domain" "Set VM Type" "Set oVirt UID/PW" "Clear vHost Settings")
       elif [[ ! -z ${VIRTHOST_TYPE} && "${VIRTHOST_TYPE}" == "libvirt" ]]; then
-        TYPE_ACTIONS=("Set vHost IP" "Set vHost MAC" "Set vHost FQDN" "Set vHost User" "Set Bridge Device" "Set Bridge Type" "Set VTAP device" "Set VTAP vlan-id" "Set HW Type" "Set KS Profile" "Set BMC FQDN" "Set BMC User" "Set VM Type" "Clear vHost Settings")
+        TYPE_ACTIONS=("Set vHost IP" "Set vHost MAC" "Set vHost FQDN" "Set Bridge Device" "Set Bridge Type" "Set VTAP device" "Set VTAP vlan-id" "Set HW Type" "Set KS Profile" "Set Default VM Machine" "Set vHost UID/PW" "Set BMC FQDN" "Set BMC UID/PW" "Clear vHost Settings")
       fi
 
-      select action in "RETURN to previous menu" "Set vHost Type" "${TYPE_ACTIONS[@]}"
+      select action in "RETURN to previous menu" "BULK EDIT params" "Set vHost Type" "${TYPE_ACTIONS[@]}"
       do
         case ${action}  in
 
-          "Set vHost User")
-            read -p "Enter libvirt host hardware BMC User [${VIRTHOST_UID}]: " input
-            VIRTHOST_UID=${input:-$VIRTHOST_UID}
+          "BULK EDIT params")
+            virthost_bulk_edit
             ;;
 
-          "Set BMC User")
-            read -p "Enter libvirt host hardware BMC User [${VIRTHOST_BMC_UID}]: " input
+          "Set vHost UID/PW")
+            read -p "Enter libvirt host UID [${VIRTHOST_UID}]: " input
+            VIRTHOST_UID=${input:-$VIRTHOST_UID}
+
+            read -s -p "Enter libvirt host password [${VIRTHOST_PW:+**********}]: " input
+            echo ""
+            read -s -p "Enter libvirt host password again [${VIRTHOST_PW:+**********}]: " input2
+            echo ""
+            echo ""
+
+            if [[ "$input" == "$input2" ]]; then
+              VIRTHOST_PW=${input:-$VIRTHOST_PW}
+            else
+              echo "WARNING: Passwords do not match ... unchanged"
+            fi
+            ;;
+
+          "Set oVirt UID/PW")
+            read -p "Enter oVirt manager UID [${OVIRT_MMANAGER_UID}]: " input
+            OVIRT_MMANAGER_UID=${input:-$OVIRT_MMANAGER_UID}
+
+            read -s -p "Enter oVirt manager password [${OVIRT_MANAGER_PW:+**********}]: " input
+            echo ""
+            read -s -p "Enter oVirt manager password again [${OVIRT_MANAGER_PW:+**********}]: " input2
+            echo ""
+            echo ""
+
+            if [[ "$input" == "$input2" ]]; then
+              OVIRT_MANAGER_PW=${input:-$OVIRT_MANAGER_PW}
+            else
+              echo "WARNING: Passwords do not match ... unchanged"
+            fi
+            ;;
+
+          "Set BMC UID/PW")
+            read -p "Enter BMC UID [${VIRTHOST_BMC_UID}]: " input
             VIRTHOST_BMC_UID=${input:-$VIRTHOST_BMC_UID}
+
+            read -s -p "Enter libvirt host BMC password [${VIRTHOST_BMC_PW:+**********}]: " input
+            echo ""
+            read -s -p "Enter libvirt host BMC password again [${VIRTHOST_BMC_PW:+**********}]: " input2
+            echo ""
+            echo ""
+
+            if [[ "$input" == "$input2" ]]; then
+              VIRTHOST_BMC_PW=${input:-$VIRTHOST_BMC_PW}
+            else
+              echo "WARNING: Passwords do not match ... unchanged"
+            fi
             ;;
 
           "Set BMC FQDN")
-            read -p "Enter libvirt host hardware BMC FQDN or IP [${VIRTHOST_BMC}]: " input
+            read -p "Enter libvirt host BMC FQDN or IP [${VIRTHOST_BMC}]: " input
             VIRTHOST_BMC=${input:-$VIRTHOST_BMC}
             ;;
 
@@ -293,7 +363,7 @@ virthost_menu () {
             fi
             ;;
 
-          "Set VM Type")
+          "Set Default VM Machine")
             if [[ ! -z ${VIRTHOST_TYPE} && "${VIRTHOST_TYPE}" == "libvirt" ]]; then
               read -p "Enter libVirt VM Type[${VIRTHOST_MACHINE}]: " input
               VIRTHOST_MACHINE=${input:-$VIRTHOST_MACHINE}
@@ -318,7 +388,9 @@ virthost_menu () {
         ##    Reprint the current settings
         ##
 
+        echo ""
         virthost_settings
+        echo ""
 
         ##
         ##    The following causes the select
