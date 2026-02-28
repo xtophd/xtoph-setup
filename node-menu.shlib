@@ -28,6 +28,16 @@ node_dump () {
       ##
       ##       Took a while to get this right, watch the variable and quote expansion carefully
       ##
+      ##       Was originally using this technique:
+      ##           node="$i"
+      ##           name="NAME_NODE$i"
+      ##           eval printf \''    %s="%s"\n'\'  'NAME_NODE${node}'    \"\$${name}\" 
+      ##
+      ##       Replaced with this once I learned about ${!varname}
+      ##           node="$i"
+      ##           name="NAME_NODE$i"
+      ##           printf '#    %s="%s"\n'   "${name}"   "${!name}" 
+      ##
 
       node="$i"
       name="NAME_NODE$i"
@@ -40,15 +50,15 @@ node_dump () {
       bmc="BMC_NODE$i"
       hg="HGROUP_NODE$i"
  
-      eval printf \''    %s="%s"\n'\'  'NAME_NODE${node}'    \"\$${name}\" 
-      eval printf \''    %s="%s"\n'\'  'NICMODE_NODE${node}' \"\$${mode}\" 
-      eval printf \''    %s="%s"\n'\'  'ADDR_NODE${node}'    \"\$${addr}\" 
-      eval printf \''    %s="%s"\n'\'  'MAC_NODE${node}'     \"\$${mac}\" 
-      eval printf \''    %s="%s"\n'\'  'HW_NODE${node}'      \"\$${hw}\" 
-      eval printf \''    %s="%s"\n'\'  'KS_NODE${node}'      \"\$${ks}\" 
-      eval printf \''    %s="%s"\n'\'  'RES_NODE${node}'     \"\$${res}\" 
-      eval printf \''    %s="%s"\n'\'  'BMC_NODE${node}'     \"\$${bmc}\" 
-      eval printf \''    %s="%s"\n'\'  'HGROUP_NODE${node}'  \"\$${hg}\" 
+      printf '    %s="%s"\n' "${name}"    "${!name}" 
+      printf '    %s="%s"\n' "${mode}"    "${!mode}" 
+      printf '    %s="%s"\n' "${addr}"    "${!addr}" 
+      printf '    %s="%s"\n' "${mac}"     "${!mac}" 
+      printf '    %s="%s"\n' "${hw}"      "${!hw}" 
+      printf '    %s="%s"\n' "${ks}"      "${!ks}" 
+      printf '    %s="%s"\n' "${res}"     "${!res}" 
+      printf '    %s="%s"\n' "${bmc}"     "${!bmc}" 
+      printf '    %s="%s"\n' "${hg}"      "${!hg}" 
 
       echo ""
     done
