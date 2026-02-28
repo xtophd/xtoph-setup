@@ -73,7 +73,7 @@ ansible_menu () {
           ;;
 
         "Set Control Host IP")
-          read -p "Enter network id [${ANSIBLE_IP}]: " input
+          read -p "Enter Control Host IP [${ANSIBLE_IP}]: " input
           ANSIBLE_IP=${input:-$ANSIBLE_IP}
           ;;
 
