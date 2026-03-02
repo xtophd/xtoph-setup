@@ -48,6 +48,8 @@ node_dump () {
       ks="KS_NODE$i"
       res="RES_NODE$i"
       bmc="BMC_NODE$i"
+      bmc_uid="BMC_UID_NODE$i"
+      bmc_pw="BMC_PW_NODE$i"
       hg="HGROUP_NODE$i"
  
       printf '    %s="%s"\n' "${name}"    "${!name}" 
@@ -58,6 +60,8 @@ node_dump () {
       printf '    %s="%s"\n' "${ks}"      "${!ks}" 
       printf '    %s="%s"\n' "${res}"     "${!res}" 
       printf '    %s="%s"\n' "${bmc}"     "${!bmc}" 
+      printf '    %s="%s"\n' "${bmc_uid}" "${!bmc_uid}" 
+      printf '    %s="%s"\n' "${bmc_pw}"  "${!bmc_pw}" 
       printf '    %s="%s"\n' "${hg}"      "${!hg}" 
 
       echo ""
