@@ -1,0 +1,79 @@
+toggle_key () {
+
+    ##
+    ## Usage:
+    ##   set_key "<KEY_NAME>"
+    ##
+   
+    if [[ "${!1}" == "True" ]] ; then
+      eval ${1}="False"
+    else
+      eval ${1}="True"
+    fi
+
+}
+
+
+
+## ----------
+
+set_key () {
+
+    ##
+    ## Usage:
+    ##   set_key "<DESCRIPTOR>" "<KEY_NAME>"
+    ##
+
+    read -p "Set $1 [${!2}]: " input
+    eval ${2}="${input:-${!2}}"
+}
+
+
+
+## ----------
+
+set_pw () {
+
+    ##
+    ## Usage:
+    ##   set_pw "<DESCRIPTOR>" "<KEY_PASSWORD>"
+    ##
+
+    read -s -p "Enter $1 password [${2:+*****}]: " input
+    echo ""
+
+    read -s -p "Enter $1 password again [${2:+*****}]: " input2
+    echo ""
+    echo ""
+
+    if [[ "$input" == "$input2" ]]; then
+        eval ${2}="${input:-${!2}}"
+    else
+        echo "WARNING: Passwords do not match ... unchanged"
+    fi
+}
+## ----------
+
+set_uidpw () {
+
+    ##
+    ## Usage:
+    ##   set_uidpw "<DESCRIPTOR>" "<KEY_USERNAME>" "<KEY_PASSWORD>"
+    ##
+
+    read -p "Enter $1 username [${!2}]: " input
+    eval ${2}="${input:-${!2}}"
+
+    read -s -p "Enter $1 password [${3:+*****}]: " input
+    echo ""
+
+    read -s -p "Enter $1 password again [${3:+*****}]: " input2
+    echo ""
+    echo ""
+
+    if [[ "$input" == "$input2" ]]; then
+        eval ${3}="${input:-${!3}}"
+    else
+        echo "WARNING: Passwords do not match ... unchanged"
+    fi
+}
