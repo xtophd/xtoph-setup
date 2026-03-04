@@ -5,6 +5,7 @@ export NETWORK_PREFIX=""
 export NETWORK_BROADCAST=""
 export NETWORK_NETMASK=""
 export NETWORK_BASEDOMAIN=""
+export NETWORK_SUBDOMAIN=""
 export NETWORK_DNS_SERVER=""
 export NETWORK_TIME_SERVER=""
 
@@ -24,6 +25,7 @@ cat <<EOVARS
     NETWORK_BROADCAST="${NETWORK_BROADCAST}"
     NETWORK_NETMASK="${NETWORK_NETMASK}"
     NETWORK_BASEDOMAIN="${NETWORK_BASEDOMAIN}"
+    NETWORK_SUBDOMAIN="${NETWORK_SUBDOMAIN}"
     NETWORK_DNS_SERVER="${NETWORK_DNS_SERVER}"
     NETWORK_TIME_SERVER="${NETWORK_TIME_SERVER}"
 EOVARS
@@ -42,9 +44,9 @@ network_settings () {
     fi
 
     echo "[ NETWORK ]"
-    echo "    id/pre/nm/bc ... ${NETWORK_ID} / ${NETWORK_PREFIX} / ${NETWORK_NETMASK} / ${NETWORK_BROADCAST}"
-    echo "    gw/dns/time  ... ${NETWORK_GATEWAY} / ${NETWORK_DNS_SERVER} / ${NETWORK_TIME_SERVER}"
-    echo "    base domain  ... ${NETWORK_BASEDOMAIN}"
+    echo "    id/pre/nm/bc     ... ${NETWORK_ID} / ${NETWORK_PREFIX} / ${NETWORK_NETMASK} / ${NETWORK_BROADCAST}"
+    echo "    gw/dns/time      ... ${NETWORK_GATEWAY} / ${NETWORK_DNS_SERVER} / ${NETWORK_TIME_SERVER}"
+    echo "    base/sub domain  ... ${NETWORK_BASEDOMAIN} / ${NETWORK_SUBDOMAIN}"
 
 }
 
@@ -85,7 +87,7 @@ network_menu () {
     network_settings
     echo ""
 
-    select action in "RETURN to previous menu" "BULK EDIT params" "Set ID" "Set Prefix" "Set Gateway" "Set Base Domain" "Set DNS Server" "Set TIME Server" 
+    select action in "RETURN to previous menu" "BULK EDIT params" "Set ID" "Set Prefix" "Set Gateway" "Set Base Domain" "Set Sub Domain" "Set DNS Server" "Set TIME Server" 
     do
       case ${action}  in
 
@@ -94,33 +96,31 @@ network_menu () {
           ;;
 
         "Set ID")
-          read -p "Enter network id [${NETWORK_ID}]: " input
-          NETWORK_ID=${input:-$NETWORK_ID}
+          set_key "Network ID" "NETWORK_ID"
           ;;
 
         "Set Prefix")
-          read -p "Enter prefix [${NETWORK_PREFIX}]: " input
-          NETWORK_PREFIX=${input:-$NETWORK_PREFIX}
+          set_key "Prefix" "NETWORK_PREFIX"
           ;;
 
         "Set Gateway")
-          read -p "Enter gateway[${NETWORK_GATEWAY}]: " input
-          NETWORK_GATEWAY=${input:-$NETWORK_GATEWAY}
+          set_key "Gateway" "NETWORK_GATEWAY"
           ;;
 
         "Set Base Domain")
-          read -p "Enter base domain [${NETWORK_BASEDOMAIN}]: " input
-          NETWORK_BASEDOMAIN=${input:-$NETWORK_BASEDOMAIN}
+          set_key "Base Domain" "NETWORK_BASEDOMAIN"
+          ;;
+
+        "Set Sub Domain")
+          set_key "Sub Domain" "NETWORK_SUBDOMAIN"
           ;;
 
         "Set DNS Server")
-          read -p "Enter dns server ipv4 address [${NETWORK_DNS_SERVER}]: " input
-          NETWORK_DNS_SERVER=${input:-$NETWORK_DNS_SERVER}
+          set_key "DNS Server" "NETWORK_DNS_SERVER"
           ;;
 
         "Set TIME Server")
-          read -p "Enter time server ipv4 address [${NETWORK_TIME_SERVER}]: " input
-          NETWORK_TIME_SERVER=${input:-$NETWORK_TIME_SERVER}
+          set_key "Time Server" "NETWORK_TIME_SERVER"
           ;;
 
         "RETURN to previous menu")

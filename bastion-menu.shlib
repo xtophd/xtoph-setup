@@ -1,4 +1,5 @@
 
+export BASTION_FW=""
 export BASTION_DNS=""
 export BASTION_DHCP=""
 export BASTION_HAPROXY=""
@@ -6,11 +7,6 @@ export BASTION_NTP=""
 export BASTION_NFS=""
 export BASTION_SQUID=""
 export BASTION_COCKPIT=""
-export BASTION_LDAP=""
-export BASTION_LDAP_URI=""
-export BASTION_LDAP_BASE_DN=""
-export BASTION_LDAP_BASE_PW=""
-export BASTION_LDAP_DN=""
 
 ##
 ## --
@@ -22,6 +18,8 @@ cat <<EOVARS
 
 ## BASTION SETTINGS
 
+    ## Following are [[ True | False ]]
+    BASTION_FW="${BASTION_FW}"
     BASTION_DNS="${BASTION_DNS}"
     BASTION_DHCP="${BASTION_DHCP}"
     BASTION_HAPROXY="${BASTION_HAPROXY}"
@@ -29,13 +27,30 @@ cat <<EOVARS
     BASTION_NFS="${BASTION_NFS}"
     BASTION_SQUID="${BASTION_SQUID}"
     BASTION_COCKPIT="${BASTION_SQUID}"
-
-    BASTION_LDAP="${BASTION_LDAP}"
-    BASTION_LDAP_URI="${BASTION_LDAP_URI}"
-    BASTION_LDAP_BASE_DN="${BASTION_LDAP_BASE_DN}"
-    BASTION_LDAP_BASE_PW=""
-    BASTION_LDAP_DN="${BASTION_LDAP_DN}"
 EOVARS
+
+}
+
+##
+## --
+##
+
+bastion_bulk_edit () {
+
+    TMPFILE="$(mktemp /var/tmp/ocp-workshop-setup.XXXXX)"
+
+    bastion_dump > $TMPFILE
+
+    vi $TMPFILE
+
+    read -p "Accept BULK EDIT update (Y/N)? " input
+
+    if [[ "${input^^}" == "Y" ]]; then
+      source $TMPFILE
+      echo "Changes sourced..."
+    fi
+
+    rm $TMPFILE
 
 }
 
@@ -45,9 +60,14 @@ EOVARS
 
 bastion_settings () {
 
+    format_str="    %-7s|%-7s|%-7s|%-7s|%-7s|%-7s|%-7s|%-7s\n"
+
     echo "[ BASTION ]"
-    printf "    %-7s|%-7s|%-7s|%-7s|%-7s|%-7s|%-7s\n" DNS DHCP HAProxy NTP NFS Squid Cockpit
-    printf "    %-7s|%-7s|%-7s|%-7s|%-7s|%-7s|%-7s\n" ${BASTION_DNS} ${BASTION_DHCP} ${BASTION_HAPROXY} ${BASTION_NTP} ${BASTION_NFS} ${BASTION_SQUID} ${BASTION_COCKPIT}
+
+    printf "$format_str" FW DNS DHCP HAProxy NTP NFS Squid Cockpit
+
+    printf "$format_str" "${BASTION_FW}" "${BASTION_DNS}" "${BASTION_DHCP}" "${BASTION_HAPROXY}"\
+                         "${BASTION_NTP}" "${BASTION_NFS}" "${BASTION_SQUID} "${BASTION_COCKPIT}
 
 }
 
@@ -65,111 +85,43 @@ bastion_menu () {
     bastion_settings
     echo ""
 
-    select action in "RETURN to previous menu" "Set DNS" "Set DHCP" "Set HAPROXY" "Set NTP" "Set NFS" "Set SQUID" "Set COCKPIT"
+    select action in "RETURN to previous menu" "BULK EDIT params" "Toggle Firewall" "Toggle DNS" "Toggle DHCP" "Toggle HAPROXY" "Toggle NTP" "Toggle NFS" "Toggle SQUID" "Toggle COCKPIT"
     do
       case ${action}  in
-        "Set DNS")
-          select BASTION_DNS in "True" "False"
-            do
-              case ${BASTION_DNS} in
-                "True" )
-                  break ;;
-                "False" )
-                  break ;;
-                "*" )
-                  ;;
-              esac
-              REPLY=
-            done
+        "BULK EDIT params")
+          bastion_bulk_edit
           ;;
 
-        "Set DHCP")
-          select BASTION_DHCP in "True" "False"
-            do
-              case ${BASTION_DHCP} in
-                "True" )
-                  break ;;
-                "False" )
-                  break ;;
-                "*" )
-                  ;;
-              esac
-              REPLY=
-            done
+        "Toggle Firewall")
+          toggle_key "BASTION_FW"
           ;;
 
-        "Set HAPROXY")
-          select BASTION_HAPROXY in "True" "False"
-            do
-              case ${BASTION_HAPROXY} in
-                "True" )
-                  break ;;
-                "False" )
-                  break ;;
-                "*" )
-                  ;;
-              esac
-              REPLY=
-            done
-          ;;
-        "Set NTP")
-          select BASTION_NTP in "True" "False"
-            do
-              case ${BASTION_NTP} in
-                "True" )
-                  break ;;
-                "False" )
-                  break ;;
-                "*" )
-                  ;;
-              esac
-              REPLY=
-            done
+        "Toggle DNS")
+          toggle_key "BASTION_DNS"
           ;;
 
-        "Set NFS")
-          select BASTION_NFS in "True" "False"
-            do
-              case ${BASTION_NFS} in
-                "True" )
-                  break ;;
-                "False" )
-                  break ;;
-                "*" )
-                  ;;
-              esac
-              REPLY=
-            done
+        "Toggle DHCP")
+          toggle_key "BASTION_DHCP"
           ;;
 
-        "Set SQUID")
-          select BASTION_SQUID in "True" "False"
-            do
-              case ${BASTION_SQUID} in
-                "True" )
-                  break ;;
-                "False" )
-                  break ;;
-                "*" )
-                  ;;
-              esac
-              REPLY=
-            done
+        "Toggle HAPROXY")
+          toggle_key "BASTION_HAPROXY"
           ;;
 
-        "Set COCKPIT")
-          select BASTION_COCKPIT in "True" "False"
-            do
-              case ${BASTION_COCKPIT} in
-                "True" )
-                  break ;;
-                "False" )
-                  break ;;
-                "*" )
-                  ;;
-              esac
-              REPLY=
-            done
+        "Toggle NTP")
+          toggle_key "BASTION_NTP"
+          ;;
+
+        "Toggle NFS")
+          toggle_key "BASTION_NFS"
+          ;;
+
+        "Toggle SQUID")
+          toggle_key "BASTION_SQUID"
+          ;;
+
+        "Toggle COCKPIT")
+          toggle_key "BASTION_COCKPIT"
           ;;
 
         "RETURN to previous menu")

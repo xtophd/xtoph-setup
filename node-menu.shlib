@@ -101,7 +101,7 @@ node_settings () {
 
     format="    %-4s|%-10s|%-6s|%-15s|%-17s|%-10s|%-10s|%-10s|%-10s|%-15s\n"
 
-    printf "$format" Node Name Mode Addr Mac HW KS Res BMC HostGroup
+    printf "$format" Node Name Mode Addr Mac HW KS RES BMC HostGroup
 
     for i in {1..9}; do
 
@@ -121,17 +121,17 @@ node_settings () {
       bmc="BMC_NODE$i"
       hg="HGROUP_NODE$i"
 
-      eval printf \""${format}"\" \
-             '${node}' \
-             \"\$${name}\" \
-             \"\$${mode}\" \
-             \"\$${addr}\" \
-             \"\$${mac}\" \
-             \"\$${hw}\" \
-             \"\$${ks}\" \
-             \"\$${res}\" \
-             \"\$${bmc}\" \
-             \"\$${hg}\"
+      printf "${format}" \
+             "${node}" \
+             "${!name}" \
+             "${!mode}" \
+             "${!addr}" \
+             "${!mac}" \
+             "${!hw}" \
+             "${!ks}" \
+             "${!res}" \
+             "${!bmc}" \
+             "${!hg}"
 
     done
 
@@ -150,34 +150,29 @@ node_submenu () {
     node_settings
     echo ""
 
-    select action in "RETURN to previous menu" "Set Name" "Set NIC Mode" "Set IP Address" "Set MAC Address" "Set Hardware" "Set Kickstart" "Set Resources" "Set BMC Address" "Set BMC Password" "Set Host Group" "Delete Node"
+    select action in "RETURN to previous menu" "Set Name" "Set NIC Mode" "Set IP Address" "Set MAC Address" "Set Hardware" "Set Kickstart" "Set Resources" "Set BMC Address" "Set BMC UID/PW" "Set Host Group" "Delete Node"
     do
       case ${action}  in
         "Set Name")
-          MAGIC_VAR="NAME_$NODE"
-          read -p "Enter Node Name [${!MAGIC_VAR}]: " input
-          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          set_key "Host Name" "NAME_$NODE"
           ;;
+
         "Set Hardware")
-          MAGIC_VAR="HW_$NODE"
-          read -p "Enter Hardware Profile [${!MAGIC_VAR}]: " input
-          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          set_key "Hardware Profile" "HW_$NODE"
           ;;
+
         "Set Kickstart")
-          MAGIC_VAR="KS_$NODE"
-          read -p "Enter Kickstart Profile [${!MAGIC_VAR}]: " input
-          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          set_key "Kickstart Profile" "KS_$NODE"
           ;;
+
         "Set Resources")
-          MAGIC_VAR="RES_$NODE"
-          read -p "Enter Resource Profile [${!MAGIC_VAR}]: " input
-          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          set_key "Resource Profile" "RES_$NODE"
           ;;
+
         "Set IP Address")
-          MAGIC_VAR="ADDR_$NODE"
-          read -p "Enter IP Address [${!MAGIC_VAR}]: " input
-          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          set_key "IP Address" "ADDR_$NODE"
           ;;
+
         "Set NIC Mode")
           select NIC_MODE in "static" "dhcp"
           do
@@ -192,40 +187,23 @@ node_submenu () {
              REPLY=
            done
            ;;
-        "Set MAC Address")
-          MAGIC_VAR="MAC_$NODE"
-          read -p "Enter MAC Address [${!MAGIC_VAR}]: " input
-          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
-          ;;
-        "Set BMC Address")
-          MAGIC_VAR="BMC_$NODE"
-          read -p "Enter BMC Address [${!MAGIC_VAR}]: " input
-          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
-          ;;
-        "Set BMC UID")
-          MAGIC_VAR="BMC_UID_$NODE"
-          read -p "Enter BMC User ID [${!MAGIC_VAR}]: " input
-          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
-          ;;
-        "Set BMC Password")
-          MAGIC_VAR="BMC_PW_$NODE"
-          echo "Enter new password and press Enter"
-          read -s -p "Enter bmc password [${!MAGIC_VAR:+**********}]: " input
-          echo ""
-          read -s -p "Enter bmc password again [${!MAGIC_VAR:+**********}]: " input2
-          echo ""
 
-          if [[ "$input" == "$input2" ]]; then
-            eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
-          else
-            echo "WARNING: Passwords do not match ... unchanged"
-          fi
+        "Set MAC Address")
+          set_key "MAC Address" "MAC_$NODE"
           ;;
+
+        "Set BMC Address")
+          set_key "BMC Address" "BMC_$NODE"
+          ;;
+
+        "Set BMC UID/PW")
+          set_key "BMC UID/PW" "BMC_UID_$NODE" "BMC_PW_$NODE"
+          ;;
+
         "Set Host Group")
-          MAGIC_VAR="HGROUP_$NODE"
-          read -p "Enter Node Name [${!MAGIC_VAR}]: " input
-          eval ${MAGIC_VAR}=${input:-${!MAGIC_VAR}}
+          set_key "Host Group" "HGROUP_$NODE"
           ;;
+
         "Delete Node")
           read -p "DELETE $NODE ... ARE YOU SURE (Y/N): " input
           if [[ "$input" == "Y" ]]; then
@@ -234,6 +212,7 @@ node_submenu () {
             done
           fi
           ;;
+
         "RETURN to previous menu")
           PS3=${SAVED_PROMPT2}
           break

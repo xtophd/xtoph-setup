@@ -33,10 +33,10 @@ EOVARS
 ldap_settings () {
 
     echo "[ LDAP ]"
-    echo "    Enabled        ... ${LDAP}"
-    echo "    URI / Base DN  ... ${LDAP_URI} / ${LDAP_BASE_DN}"
-    echo "    Bind DN / PW   ... ${LDAP_BIND_DN} / ${LDAP_BIND_PW:+**********}"
-    echo "    Sudo Group     ... ${LDAP_SUDO_GRP}"
+    echo "    Enabled          ... ${LDAP}"
+    echo "    URI / Base DN    ... ${LDAP_URI} / ${LDAP_BASE_DN}"
+    echo "    Bind DN / PW     ... ${LDAP_BIND_DN} / ${LDAP_BIND_PW:+**********}"
+    echo "    Sudo Group       ... ${LDAP_SUDO_GRP}"
 
 }
 
@@ -81,7 +81,7 @@ ldap_menu () {
 
     echo ""
 
-    select action in "RETURN to previous menu" "BULK EDIT params" "Set Enabled" "Set URI" "Set BASE_DN" "Set BIND_DN" "Set BIND_PW" "Set SUDO_GRP"
+    select action in "RETURN to previous menu" "BULK EDIT params" "Toggle Enabled" "Set URI" "Set BASE_DN" "Set BIND_DN" "Set BIND_PW" "Set SUDO_GRP"
     do
       case ${action}  in
 
@@ -89,55 +89,29 @@ ldap_menu () {
           ldap_bulk_edit
           ;;
 
-        "Set Enabled")
-          select LDAP in "True" "False"
-            do
-              case ${LDAP} in
-                "True" )
-                  break ;;
-                "False" )
-                  break ;;
-                "*" )
-                  ;;
-              esac
-              REPLY=
-            done
+        "Toggle Enabled")
+          toggle_key "LDAP"
           ;;
 
         "Set URI")
-          read -p "Enter LDAP URI [${LDAP_URI}]: " input
-          LDAP_URI=${input:-$LDAP_URI}
+          set_key "URI" "LDAP_URI"
           ;;
 
         "Set BASE_DN")
-          read -p "Enter LDAP DN [${LDAP_BASE_DN}]: " input
-          LDAP_BASE_DN=${input:-$LDAP_BASE_DN}
+          set_key "BASE DN" "LDAP_BASE_DN"
           ;;
 
         "Set BIND_DN")
-          read -p "Enter LDAP DN [${LDAP_BIND_DN}]: " input
-          LDAP_BIND_DN=${input:-$LDAP_BIND_DN}
+          set_key "BIND DN" "LDAP_BIND_DN"
           ;;
 
         "Set BIND_PW")
-          read -s -p "Enter BIND_PW [${LDAP_BIND_PW:+**********}]: " input
-          echo ""
-          read -s -p "Enter BIND_PW again [${LDAP_BIND_PW:+**********}]: " input2
-          echo ""
-          echo ""
-
-          if [[ "$input" == "$input2" ]]; then
-            LDAP_BIND_PW=${input:-$LDAP_BIND_PW}
-          else
-            echo "WARNING: Passwords do not match ... unchanged"
-          fi
+          set_pw "BIND DN" "LDAP_BIND_PW"
           ;;
 
         "Set SUDO_GRP")
-          read -p "Enter LDAP Group for sudo access [${LDAP_SUDO_GRP}]: " input
-          LDAP_SUDO_GRP=${input:-$LDAP_SUDO_GRP}
+          set_key "Group for sudo access" "LDAP_SUDO_GRP"
           ;;
-
 
         "RETURN to previous menu")
           PS3=${SAVED_PROMPT}

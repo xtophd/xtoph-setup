@@ -73,22 +73,11 @@ ansible_menu () {
           ;;
 
         "Set Control Host IP")
-          read -p "Enter Control Host IP [${ANSIBLE_IP}]: " input
-          ANSIBLE_IP=${input:-$ANSIBLE_IP}
+          set_key "Control Host IP" "ANSIBLE_IP"
           ;;
 
         "Set Vault Password")
-          read -s -p "Enter ansible vault password [${ANSIBLE_VAULT_PW:+**********}]: " input
-          echo ""
-          read -s -p "Enter ansible vault password again [${ANSIBLLE_VAULT_PW:+**********}]: " input2
-          echo ""
-          echo ""
-
-          if [[ "$input" == "$input2" ]]; then
-            ANSIBLE_VAULT_PW=${input:-$ANSIBLE_VAULT_PW}
-          else
-            echo "WARNING: Passwords do not match ... unchanged"
-          fi
+          set_pw "Ansible Vault" "ANSIBLE_VAULT_PW"
           ;;
 
         "RETURN to previous menu")
