@@ -67,7 +67,7 @@ bastion_settings () {
     printf "$format_str" FW DNS DHCP HAProxy NTP NFS Squid Cockpit
 
     printf "$format_str" "${BASTION_FW}" "${BASTION_DNS}" "${BASTION_DHCP}" "${BASTION_HAPROXY}"\
-                         "${BASTION_NTP}" "${BASTION_NFS}" "${BASTION_SQUID} "${BASTION_COCKPIT}
+                         "${BASTION_NTP}" "${BASTION_NFS}" "${BASTION_SQUID}" "${BASTION_COCKPIT}"
 
 }
 
@@ -130,7 +130,7 @@ bastion_menu () {
           ;;
 
         "*")
-          echo "That's NOT an option, try again..."
+          echo "That is NOT an option, try again..."
           ;;
 
       esac
