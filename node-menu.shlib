@@ -1,15 +1,23 @@
 
-export NAME_NODE{1..9}=""
-export ADDR_NODE{1..9}=""
-export NICMODE_NODE{1..9}=""
-export BMC_NODE{1..9}=""
-export BMC_UID_NODE{1..9}=""
-export BMC_PW_NODE{1..9}=""
-export MAC_NODE{1..9}=""
-export HW_NODE{1..9}=""
-export KS_NODE{1..9}=""
-export RES_NODE{1..9}=""
-export HGROUP_NODE{1..9}=""
+if [[ -z ${NODE_COUNT} || ! ${NODE_COUNT} =~ ^[0-9]+$ ]]; then
+    echo "Setting NODE_COUNT to default of 9"
+    export NODE_COUNT="9"
+fi
+
+
+for ((i=1; i<=${NODE_COUNT};++i )); do
+export NAME_NODE{1..15}=""
+export ADDR_NODE{1..15}=""
+export NICMODE_NODE{1..15}=""
+export BMC_NODE{1..15}=""
+export BMC_UID_NODE{1..15}=""
+export BMC_PW_NODE{1..15}=""
+export MAC_NODE{1..15}=""
+export HW_NODE{1..15}=""
+export KS_NODE{1..15}=""
+export RES_NODE{1..15}=""
+export HGROUP_NODE{1..15}=""
+done
 
 export BMC_PW_DEFAULT=""
 export BMC_UID_DEFAUT=""
@@ -22,7 +30,7 @@ node_dump () {
     echo "## NODE SETTINGS"
     echo ""
 
-    for i in {1..9}; do
+    for ((i=1; i<=${NODE_COUNT};++i )); do
 
       ##   NOTE:
       ##
@@ -103,7 +111,7 @@ node_settings () {
 
     printf "$format" Node Name Mode Addr Mac HW KS RES BMC HostGroup
 
-    for i in {1..9}; do
+    for ((i=1; i<=${NODE_COUNT};++i )); do
 
       ##   NOTE:
       ##
@@ -207,7 +215,7 @@ node_submenu () {
         "Delete Node")
           read -p "DELETE $NODE ... ARE YOU SURE (Y/N): " input
           if [[ "$input" == "Y" ]]; then
-            for MAGIC_VAR in HW_$NODE ADDR_$NODE MAC_$NODE BMC_$NODE BMC_PW_$NODE KS_$NODE RES_$NODE NAME_$NODE; do
+            for MAGIC_VAR in HW_$NODE NICMODE_$NODE ADDR_$NODE MAC_$NODE BMC_$NODE BMC_PW_$NODE KS_$NODE RES_$NODE NAME_$NODE; do
               eval ${MAGIC_VAR}=""
             done
           fi
@@ -253,7 +261,7 @@ node_menu () {
     node_settings
     echo ""
 
-    select action in "RETURN to previous menu" "BULK EDIT params" Node{1..9}
+    select action in "RETURN to previous menu" "BULK EDIT params" $( eval echo "Node{1..$NODE_COUNT}" )
     do
       case ${action}  in
 
