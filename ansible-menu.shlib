@@ -36,6 +36,29 @@ ansible_settings () {
 ## --
 ##
 
+ansible_bulk_edit () {
+
+    TMPFILE="$(mktemp /var/tmp/ocp-workshop-setup.XXXXX)"
+
+    ansible_dump > $TMPFILE
+
+    vi $TMPFILE
+
+    read -p "Accept BULK EDIT update (Y/N)? " input
+
+    if [[ "${input^^}" == "Y" ]]; then
+      source $TMPFILE
+      echo "Changes sourced..."
+    fi
+
+    rm $TMPFILE
+
+}
+
+##
+## --
+##
+
 ansible_menu () {
 
     SAVED_PROMPT="$PS3"
@@ -47,11 +70,18 @@ ansible_menu () {
     echo ""
 
     select action in "RETURN to previous menu" \
+                     "BULK EDIT params" \
                      "Set Ansible Source" \
                      "Set Control Host IP" \
                      "Set Vault Password"
     do
       case ${action}  in
+
+        "BULK EDIT params")
+          ansible_bulk_edit
+          ;;
+
+
         "Set Ansible Source")
           if [[ "${ANSIBLE_SOURCE}" == "INSTALLED" ]]; then
             echo ""

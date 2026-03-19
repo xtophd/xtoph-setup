@@ -197,7 +197,7 @@ node_submenu () {
           ;;
 
         "Set BMC UID/PW")
-          set_key "BMC UID/PW" "BMC_UID_$NODE" "BMC_PW_$NODE"
+          set_uidpw "BMC UID/PW" "BMC_UID_$NODE" "BMC_PW_$NODE"
           ;;
 
         "Set Host Group")
