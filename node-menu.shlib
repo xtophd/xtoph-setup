@@ -60,23 +60,23 @@ node_dump () {
       bmc_pw="BMC_PW_NODE$i"
       hg="HGROUP_NODE$i"
  
-      printf '    %s="%s"\n' "${name}"    "${!name}" 
-      printf '    %s="%s"\n' "${mode}"    "${!mode}" 
-      printf '    %s="%s"\n' "${addr}"    "${!addr}" 
-      printf '    %s="%s"\n' "${mac}"     "${!mac}" 
-      printf '    %s="%s"\n' "${hw}"      "${!hw}" 
-      printf '    %s="%s"\n' "${ks}"      "${!ks}" 
-      printf '    %s="%s"\n' "${res}"     "${!res}" 
-      printf '    %s="%s"\n' "${bmc}"     "${!bmc}" 
-      printf '    %s="%s"\n' "${bmc_uid}" "${!bmc_uid}" 
-      printf '    %s="%s"\n' "${bmc_pw}"  "${!bmc_pw}" 
-      printf '    %s="%s"\n' "${hg}"      "${!hg}" 
+      printf '    %s="%s"\n'   "${name}"    "${!name}" 
+      printf '    %s="%s"\n'   "${mode}"    "${!mode}" 
+      printf '    %s="%s"\n'   "${addr}"    "${!addr}" 
+      printf '    %s="%s"\n'   "${mac}"     "${!mac}" 
+      printf '    %s="%s"\n'   "${hw}"      "${!hw}" 
+      printf '    %s="%s"\n'   "${ks}"      "${!ks}" 
+      printf '    %s="%s"\n'   "${res}"     "${!res}" 
+      printf '    %s="%s"\n'   "${bmc}"     "${!bmc}" 
+      printf '    %s="%s"\n'   "${bmc_uid}" "${!bmc_uid}" 
+      printf '    # %s="%s"\n' "${bmc_pw}"  "" 
+      printf '    %s="%s"\n'   "${hg}"      "${!hg}" 
 
       echo ""
     done
 
-    echo "    BMC_PW_DEFAULT=\"\""
     echo "    BMC_UID_DEFAULT=\"${BMC_UID_DEFAULT}\""
+    echo "    # BMC_PW_DEFAULT=\"\""
 
 }
 
@@ -215,7 +215,7 @@ node_submenu () {
         "Delete Node")
           read -p "DELETE $NODE ... ARE YOU SURE (Y/N): " input
           if [[ "$input" == "Y" ]]; then
-            for MAGIC_VAR in HW_$NODE NICMODE_$NODE ADDR_$NODE MAC_$NODE BMC_$NODE BMC_PW_$NODE KS_$NODE RES_$NODE NAME_$NODE; do
+            for MAGIC_VAR in HW_$NODE NICMODE_$NODE ADDR_$NODE MAC_$NODE BMC_$NODE BMC_PW_$NODE KS_$NODE RES_$NODE NAME_$NODE HGROUP_$NODE; do
               eval ${MAGIC_VAR}=""
             done
           fi
