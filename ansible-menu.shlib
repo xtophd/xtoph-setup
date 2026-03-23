@@ -27,8 +27,9 @@ EOVARS
 ansible_settings () {
 
     echo "[ ANSIBLE ]"
-    printf "    %-${#ANSIBLE_SOURCE}s|%-${#ANSIBLE_IP}s|%s\n" "Source" "Ctrl Host IP" "Vault PW"
-    printf "    %-${#ANSIBLE_SOURCE}s|%-${#ANSIBLE_IP}s|%s\n" "${ANSIBLE_SOURCE}" "${ANSIBLE_IP}" "${ANSIBLE_VAULT_PW:+**********}"
+    echo "    Source           ... ${ANSIBLE_SOURCE}"
+    echo "    Control-Host IP  ... ${ANSIBLE_IP}"
+    echo "    Vault PW         ... ${ANSIBLE_VAULT_PW:+**********}"
 
 }
 

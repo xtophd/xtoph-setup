@@ -1,12 +1,13 @@
 
-export BASTION_FW=""
-export BASTION_DNS=""
-export BASTION_DHCP=""
-export BASTION_HAPROXY=""
-export BASTION_NTP=""
-export BASTION_NFS=""
-export BASTION_SQUID=""
-export BASTION_COCKPIT=""
+export BASTION="False"
+export BASTION_FW="False"
+export BASTION_DNS="False"
+export BASTION_DHCP="False"
+export BASTION_HAPROXY="False"
+export BASTION_NTP="False"
+export BASTION_NFS="False"
+export BASTION_SQUID="False"
+export BASTION_COCKPIT="False"
 
 ##
 ## --
@@ -19,6 +20,7 @@ cat <<EOVARS
 ## BASTION SETTINGS
 
     ## Following are [[ True | False ]]
+    BASTION="${BASTION}"
     BASTION_FW="${BASTION_FW}"
     BASTION_DNS="${BASTION_DNS}"
     BASTION_DHCP="${BASTION_DHCP}"
@@ -63,11 +65,10 @@ bastion_settings () {
     format_str="    %-7s|%-7s|%-7s|%-7s|%-7s|%-7s|%-7s|%-7s\n"
 
     echo "[ BASTION ]"
-
-    printf "$format_str" FW DNS DHCP HAProxy NTP NFS Squid Cockpit
-
-    printf "$format_str" "${BASTION_FW}" "${BASTION_DNS}" "${BASTION_DHCP}" "${BASTION_HAPROXY}"\
-                         "${BASTION_NTP}" "${BASTION_NFS}" "${BASTION_SQUID}" "${BASTION_COCKPIT}"
+    echo "    Enabled          ... ${BASTION}"
+    echo "    fw/dns/ntp/nfs   ... ${BASTION_FW} / ${BASTION_DNS} / ${BASTION_NTP} / ${BASTION_NFS}"
+    echo "    dhcp/haproxy     ... ${BASTION_DHCP} / ${BASTION_HAPROXY}"
+    echo "    squid/cockpit    ... ${BASTION_SQUID} / ${BASTION_COCKPIT}"
 
 }
 
@@ -85,11 +86,15 @@ bastion_menu () {
     bastion_settings
     echo ""
 
-    select action in "RETURN to previous menu" "BULK EDIT params" "Toggle Firewall" "Toggle DNS" "Toggle DHCP" "Toggle HAPROXY" "Toggle NTP" "Toggle NFS" "Toggle SQUID" "Toggle COCKPIT"
+    select action in "RETURN to previous menu" "BULK EDIT params" "Toggle Bastion" "Toggle Firewall" "Toggle DNS" "Toggle DHCP" "Toggle HAPROXY" "Toggle NTP" "Toggle NFS" "Toggle SQUID" "Toggle COCKPIT"
     do
       case ${action}  in
         "BULK EDIT params")
           bastion_bulk_edit
+          ;;
+
+        "Toggle Bastion")
+          toggle_key "BASTION"
           ;;
 
         "Toggle Firewall")
