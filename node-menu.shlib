@@ -22,7 +22,7 @@ export HGROUP_NODE{1..15}=""
 done
 
 export BMC_PW_DEFAULT=""
-export BMC_UID_DEFAUT=""
+export BMC_UID_DEFAULT=""
 
 # ---
 
@@ -113,7 +113,11 @@ node_settings () {
 
     echo "[ NODE SETTINGS ] "
 
-    format="    %-4s|%-10s|%-6s|%-15s|%-15s|%-10s|%-10s|%-17s|%-15s|%-10s|%-10s|%-15s\n"
+    echo ""
+    echo "    BMC Defaults     ... ${BMC_UID_DEFAULT} / ${BMC_PW_DEFAULT:+**********}"
+    echo ""
+
+    format="    %-4s|%-10s|%-6s|%-15s|%-15s|%-10s|%-10s|%-17s|%-15s|%-17s|%-15s|%-15s\n"
 
     printf "$format" Node Name Mode Addr HW BlkDev NetDev MAC KS RES BMC HostGroup
 
@@ -152,6 +156,7 @@ node_settings () {
              "${!hg}"
 
     done
+
 
 }
 
@@ -279,7 +284,7 @@ node_menu () {
     node_settings
     echo ""
 
-    select action in "RETURN to previous menu" "BULK EDIT params" $( eval echo "Node{1..$NODE_COUNT}" )
+    select action in "RETURN to previous menu" "BULK EDIT params" "Set BMC Defaults" $( eval echo "Node{1..$NODE_COUNT}" )
     do
       case ${action}  in
 
@@ -301,6 +306,13 @@ node_menu () {
           PS3=${SAVED_PROMPT}
           break
           ;;
+
+        "Set BMC Defaults")
+          set_uidpw "Default BMC" BMC_UID_DEFAULT BMC_PW_DEFAULT
+          ;;
+
+
+
         "*")
           echo "That's NOT an option, try again..."
           ;;
