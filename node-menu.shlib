@@ -11,7 +11,7 @@ export ADDR_NODE{1..15}=""
 export NICMODE_NODE{1..15}=""
 export BMC_NODE{1..15}=""
 export BMC_UID_NODE{1..15}=""
-export BMC_PW_NODE{1..15}=""
+export BMC_PW_NODE{1..15}
 export HW_NODE{1..15}=""
 export BLKDEV_NODE{1..15}=""
 export NETDEV_NODE{1..15}=""
@@ -21,7 +21,7 @@ export RES_NODE{1..15}=""
 export HGROUP_NODE{1..15}=""
 done
 
-export BMC_PW_DEFAULT=""
+export BMC_PW_DEFAULT
 export BMC_UID_DEFAULT=""
 
 # ---
