@@ -12,8 +12,10 @@ export NICMODE_NODE{1..15}=""
 export BMC_NODE{1..15}=""
 export BMC_UID_NODE{1..15}=""
 export BMC_PW_NODE{1..15}=""
-export MAC_NODE{1..15}=""
 export HW_NODE{1..15}=""
+export BLKDEV_NODE{1..15}=""
+export NETDEV_NODE{1..15}=""
+export MAC_NODE{1..15}=""
 export KS_NODE{1..15}=""
 export RES_NODE{1..15}=""
 export HGROUP_NODE{1..15}=""
@@ -51,8 +53,10 @@ node_dump () {
       name="NAME_NODE$i"
       mode="NICMODE_NODE$i"
       addr="ADDR_NODE$i"
-      mac="MAC_NODE$i"
       hw="HW_NODE$i"
+      blk="BLKDEV_NODE$i"
+      net="NETDEV_NODE$i"
+      mac="MAC_NODE$i"
       ks="KS_NODE$i"
       res="RES_NODE$i"
       bmc="BMC_NODE$i"
@@ -63,8 +67,10 @@ node_dump () {
       printf '    %s="%s"\n'   "${name}"    "${!name}" 
       printf '    %s="%s"\n'   "${mode}"    "${!mode}" 
       printf '    %s="%s"\n'   "${addr}"    "${!addr}" 
-      printf '    %s="%s"\n'   "${mac}"     "${!mac}" 
       printf '    %s="%s"\n'   "${hw}"      "${!hw}" 
+      printf '    %s="%s"\n'   "${blk}"     "${!blk}" 
+      printf '    %s="%s"\n'   "${net}"     "${!net}" 
+      printf '    %s="%s"\n'   "${mac}"     "${!mac}" 
       printf '    %s="%s"\n'   "${ks}"      "${!ks}" 
       printf '    %s="%s"\n'   "${res}"     "${!res}" 
       printf '    %s="%s"\n'   "${bmc}"     "${!bmc}" 
@@ -107,9 +113,9 @@ node_settings () {
 
     echo "[ NODE SETTINGS ] "
 
-    format="    %-4s|%-10s|%-6s|%-15s|%-17s|%-10s|%-10s|%-10s|%-10s|%-15s\n"
+    format="    %-4s|%-10s|%-6s|%-15s|%-15s|%-10s|%-10s|%-17s|%-15s|%-10s|%-10s|%-15s\n"
 
-    printf "$format" Node Name Mode Addr Mac HW KS RES BMC HostGroup
+    printf "$format" Node Name Mode Addr HW BlkDev NetDev MAC KS RES BMC HostGroup
 
     for ((i=1; i<=${NODE_COUNT};++i )); do
 
@@ -122,8 +128,10 @@ node_settings () {
       name="NAME_NODE$i"
       mode="NICMODE_NODE$i"
       addr="ADDR_NODE$i"
-      mac="MAC_NODE$i"
       hw="HW_NODE$i"
+      blk="BLKDEV_NODE$i"
+      net="NETDEV_NODE$i"
+      mac="MAC_NODE$i"
       ks="KS_NODE$i"
       res="RES_NODE$i"
       bmc="BMC_NODE$i"
@@ -134,8 +142,10 @@ node_settings () {
              "${!name}" \
              "${!mode}" \
              "${!addr}" \
-             "${!mac}" \
              "${!hw}" \
+             "${!blk}" \
+             "${!net}" \
+             "${!mac}" \
              "${!ks}" \
              "${!res}" \
              "${!bmc}" \
@@ -158,7 +168,7 @@ node_submenu () {
     node_settings
     echo ""
 
-    select action in "RETURN to previous menu" "Set Name" "Set NIC Mode" "Set IP Address" "Set MAC Address" "Set Hardware" "Set Kickstart" "Set Resources" "Set BMC Address" "Set BMC UID/PW" "Set Host Group" "Delete Node"
+    select action in "RETURN to previous menu" "Set Name" "Set NIC Mode" "Set IP Address" "Set MAC Address" "Set Hardware" "Set Block Device" "Set Network Device" "Set Kickstart" "Set Resources" "Set BMC Address" "Set BMC UID/PW" "Set Host Group" "Delete Node"
     do
       case ${action}  in
         "Set Name")
@@ -167,6 +177,14 @@ node_submenu () {
 
         "Set Hardware")
           set_key "Hardware Profile" "HW_$NODE"
+          ;;
+
+        "Set Block Device")
+          set_key "Block Device" "BLKDEV_$NODE"
+          ;;
+
+        "Set Network Device")
+          set_key "Network Device" "NETDEV_$NODE"
           ;;
 
         "Set Kickstart")
