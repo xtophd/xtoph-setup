@@ -15,6 +15,7 @@ export BMC_PW_NODE{1..15}
 export HW_NODE{1..15}=""
 export BLKDEV_NODE{1..15}=""
 export NETDEV_NODE{1..15}=""
+export KOPTS_NODE{1..15}=""
 export MAC_NODE{1..15}=""
 export KS_NODE{1..15}=""
 export RES_NODE{1..15}=""
@@ -56,6 +57,7 @@ node_dump () {
       hw="HW_NODE$i"
       blk="BLKDEV_NODE$i"
       net="NETDEV_NODE$i"
+      kopts="KOPTS_NODE$i"
       mac="MAC_NODE$i"
       ks="KS_NODE$i"
       res="RES_NODE$i"
@@ -70,6 +72,7 @@ node_dump () {
       printf '    %s="%s"\n'   "${hw}"      "${!hw}" 
       printf '    %s="%s"\n'   "${blk}"     "${!blk}" 
       printf '    %s="%s"\n'   "${net}"     "${!net}" 
+      printf '    %s="%s"\n'   "${kopts}"   "${!kopts}" 
       printf '    %s="%s"\n'   "${mac}"     "${!mac}" 
       printf '    %s="%s"\n'   "${ks}"      "${!ks}" 
       printf '    %s="%s"\n'   "${res}"     "${!res}" 
@@ -117,9 +120,9 @@ node_settings () {
     echo "    BMC Defaults     ... ${BMC_UID_DEFAULT} / ${BMC_PW_DEFAULT:+**********}"
     echo ""
 
-    format="    %-4s|%-10s|%-6s|%-15s|%-15s|%-10s|%-10s|%-17s|%-15s|%-17s|%-15s|%-15s\n"
+    format="    %-4s|%-10s|%-6s|%-15s|%-15s|%-10s|%-10s|%-10s|%-17s|%-15s|%-17s|%-15s|%-15s\n"
 
-    printf "$format" Node Name Mode Addr HW BlkDev NetDev MAC KS RES BMC HostGroup
+    printf "$format" Node Name Mode Addr HW BlkDev NetDev KOpts MAC KS RES BMC HostGroup
 
     for ((i=1; i<=${NODE_COUNT};++i )); do
 
@@ -135,6 +138,7 @@ node_settings () {
       hw="HW_NODE$i"
       blk="BLKDEV_NODE$i"
       net="NETDEV_NODE$i"
+      kopts="KOPTS_NODE$i"
       mac="MAC_NODE$i"
       ks="KS_NODE$i"
       res="RES_NODE$i"
@@ -149,6 +153,7 @@ node_settings () {
              "${!hw}" \
              "${!blk}" \
              "${!net}" \
+             "${!kopts}" \
              "${!mac}" \
              "${!ks}" \
              "${!res}" \
@@ -173,7 +178,7 @@ node_submenu () {
     node_settings
     echo ""
 
-    select action in "RETURN to previous menu" "Set Name" "Set NIC Mode" "Set IP Address" "Set MAC Address" "Set Hardware" "Set Block Device" "Set Network Device" "Set Kickstart" "Set Resources" "Set BMC Address" "Set BMC UID/PW" "Set Host Group" "Delete Node"
+    select action in "RETURN to previous menu" "Set Name" "Set NIC Mode" "Set IP Address" "Set MAC Address" "Set Hardware" "Set Block Device" "Set Network Device" "Set Kernel Options" "Set Kickstart" "Set Resources" "Set BMC Address" "Set BMC UID/PW" "Set Host Group" "Delete Node"
     do
       case ${action}  in
         "Set Name")
@@ -190,6 +195,10 @@ node_submenu () {
 
         "Set Network Device")
           set_key "Network Device" "NETDEV_$NODE"
+          ;;
+
+        "Set Kernel Options")
+          set_key "Kernel Options" "KOPTS_$NODE"
           ;;
 
         "Set Kickstart")
